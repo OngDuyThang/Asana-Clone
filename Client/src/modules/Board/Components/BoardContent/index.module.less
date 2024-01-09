@@ -1,0 +1,17 @@
+.root {
+    height: calc(100vh - var(--header-height) - var(--boardbar-height) - 8px);
+    padding: 16px;
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    .column {
+        width: 320px;
+        max-height: 100%;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        box-shadow: var(--board-shadow);
+        border-radius: 4px;
+    }
+}

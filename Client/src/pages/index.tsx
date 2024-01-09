@@ -1,9 +1,12 @@
+import { Container } from "components"
+import type { FC } from "react"
 
-
-export default function Home() {
+const Home: FC = () => {
     return (
-        <div className=' bg-slate-500 text-white'>
-            hello world
-        </div>
+        <Container>
+            HOME PAGE
+        </Container>
     )
 }
+
+export default Home

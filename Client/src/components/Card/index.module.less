@@ -1,0 +1,24 @@
+.root {
+    &:hover {
+        box-shadow: var(--card-hover);
+    }
+    :global(.ant-card-body) {
+        padding: 8px 16px
+    }
+}
+
+.card-light {
+    :global(.ant-card-actions) {
+        li {
+            color: var(--light-text)
+        }
+    }
+}
+
+.card-dark {
+    :global(.ant-card-actions) {
+        li {
+            color: var(--dark-text)
+        }
+    }
+}

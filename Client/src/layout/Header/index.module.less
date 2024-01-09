@@ -1,0 +1,54 @@
+.header {
+    all: unset;
+}
+
+.root {
+    height: var(--header-height);
+    padding: 0 16px;
+    overflow-x: auto;
+    @media (max-width: 480px) {
+        padding: 0 8px;
+    }
+
+    &::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+    }
+    &::-webkit-scrollbar-track {
+        margin: 0;
+    }
+     
+    .left {
+        @media (max-width: 768px) {
+            width: 20%;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80%;
+        }
+    
+        .menus {
+            color: #fff;
+            @media (max-width: 992px) {
+                display: none;
+            }
+        }
+    }
+    
+    .right {
+        @media (max-width: 768px) {
+            width: 80%;
+        }
+
+        .themeSelect :global(.ant-select-selector) {
+            border-color: #fff !important;
+            color: #fff;
+            background-color: transparent;
+        }
+
+        .search {
+            width: 300px !important;
+        }
+    }  
+}
