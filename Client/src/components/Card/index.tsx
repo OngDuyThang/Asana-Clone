@@ -1,4 +1,4 @@
-import { type FC } from 'react'
+import { forwardRef, type FC } from 'react'
 import {
     Card as AntdCard,
     CardProps as AntdCardProps,
@@ -16,7 +16,7 @@ interface CardProps extends
     Pick<Required<AntdCardProps>, TCardProps>,
     Omit<AntdCardProps, TCardProps> { }
 
-export const Card: FC<CardProps> = ({
+export const Card = forwardRef<HTMLDivElement, CardProps>(({
     className,
     cover,
     actions,
@@ -25,7 +25,7 @@ export const Card: FC<CardProps> = ({
     bordered = false,
     extra,
     ...props
-}) => {
+}, ref) => {
     const theme = useValueByTheme(lightTheme, darkTheme)
     const { theme: reduxTheme } = useAppSelector(state => state.system)
 
@@ -39,9 +39,12 @@ export const Card: FC<CardProps> = ({
                 bordered={bordered}
                 extra={extra}
                 {...props}
+                ref={ref}
             >
                 {children}
             </AntdCard>
         </AntdConfigProvider>
     )
-}
+})
+
+Card.displayName = 'Card'

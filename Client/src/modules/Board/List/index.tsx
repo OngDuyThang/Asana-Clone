@@ -4,7 +4,6 @@ import { type FC } from 'react'
 import BoardBar from '../Components/BoardBar'
 import BoardContent from '../Components/BoardContent'
 import { TBoard } from 'types/board'
-import { sortByOrder } from 'utils/helpers'
 
 interface BoardListProps {
     boardData: TBoard
@@ -21,11 +20,8 @@ const BoardList: FC<BoardListProps> = ({
                 type={boardData.type}
             />
             <BoardContent
-                columnList={sortByOrder(
-                    boardData.columns,
-                    boardData.columnOrderIds,
-                    'id'
-                )}
+                columnList={boardData.columns}
+                columnOrder={boardData.columnOrderIds}
             />
         </Container>
     )

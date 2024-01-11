@@ -1,21 +1,31 @@
-import { ReactNode, type FC, CSSProperties } from 'react'
+import { ReactNode, CSSProperties, forwardRef, HTMLProps } from 'react'
 
-interface DivProps {
+interface DivProps extends HTMLProps<HTMLDivElement> {
     children: ReactNode;
     className?: string;
-    style?: CSSProperties
+    style?: CSSProperties;
+    id?: string;
 }
 
-const Div: FC<DivProps> = ({
+const Div = forwardRef<HTMLDivElement, DivProps>(({
     children,
     className,
-    style
-}) => {
+    style,
+    id,
+    ...props
+}, ref) => {
     return (
-        <div className={className} style={style}>
+        <div
+            className={className}
+            style={style}
+            id={id}
+            {...props}
+            ref={ref}
+        >
             {children}
         </div>
     )
-}
+})
 
+Div.displayName = 'Div'
 export default Div

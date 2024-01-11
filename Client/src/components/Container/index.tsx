@@ -1,4 +1,4 @@
-import type { CSSProperties, FC, ReactNode } from "react";
+import { forwardRef, CSSProperties, ReactNode, HTMLProps } from "react";
 import styles from './index.module.less'
 import clsx from "clsx";
 import { Div } from "components";
@@ -8,7 +8,7 @@ type layout = 'start' | 'center' | 'end'
 type justify = 'between' | 'evenly' | 'around'
 type direction = 'row' | 'column' | 'row-reverse' | 'column-reverse'
 
-interface ContainerProps {
+interface ContainerProps extends HTMLProps<HTMLDivElement> {
     children: ReactNode;
     width?: percen;
     height?: percen;
@@ -21,9 +21,10 @@ interface ContainerProps {
     color?: string;
     background?: string;
     style?: CSSProperties;
+    id?: string;
 }
 
-const Container: FC<ContainerProps> = ({
+const Container = forwardRef<HTMLDivElement, ContainerProps>(({
     children,
     width = '100',
     height,
@@ -35,8 +36,10 @@ const Container: FC<ContainerProps> = ({
     className,
     color,
     background,
-    style
-}) => {
+    style,
+    id,
+    ...props
+}, ref) => {
     return (
         <Div
             className={clsx(
@@ -54,10 +57,14 @@ const Container: FC<ContainerProps> = ({
                 background,
                 ...style
             }}
+            id={id}
+            {...props}
+            ref={ref}
         >
             {children}
         </Div>
     )
-}
+})
 
+Container.displayName = 'Container'
 export default Container

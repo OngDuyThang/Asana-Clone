@@ -8,13 +8,17 @@ export const mockData: TBoard = {
     title: 'board-title-01',
     description: 'Pro MERN stack Course',
     type: 'public', // 'private'
+    // RELATIVE
     columnOrderIds: ['column-id-01', 'column-id-03', 'column-id-02'], // Thứ tự sắp xếp / vị trí của các Columns trong 1 boards
+    // CONSTANT
     columns: [
         {
             id: 'column-id-01',
             boardId: 'board-id-01',
             title: 'To Do Column 01',
+            // RELATIVE
             cardOrderIds: ['card-id-01', 'card-id-07', 'card-id-03', 'card-id-04', 'card-id-05', 'card-id-06', 'card-id-02'],
+            // CONSTANT
             cards: [
                 {
                     id: 'card-id-01',

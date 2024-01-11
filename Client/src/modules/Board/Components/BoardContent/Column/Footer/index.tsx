@@ -8,7 +8,7 @@ const Footer: FC = () => {
     return (
         <Container flex justify='between' align='center'>
             <Button
-                onClick={() => { }}
+                onClick={() => { console.log('click') }}
                 icon={<MdAddBox className='w-4 h-4' />}
                 fontWeight='600'
             >
