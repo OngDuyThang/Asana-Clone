@@ -6,6 +6,7 @@ import { TCard } from 'types/card'
 import { sortByOrder } from 'utils/helpers'
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities';
+import { cloneDeep } from 'lodash'
 
 export const Card = ({ cardData }: { cardData: TCard }) => {
     const {
@@ -17,7 +18,7 @@ export const Card = ({ cardData }: { cardData: TCard }) => {
         isDragging
     } = useSortable({
         id: cardData.id,
-        data: { ...cardData }
+        data: cloneDeep(cardData)
     });
     const style = {
         transform: CSS.Translate.toString(transform),
@@ -64,7 +65,7 @@ const Content: FC<ContentProps> = ({
     cardList,
     cardOrder
 }) => {
-    const [sortedOrder, setSortedOrder] = useState<string[]>(cardOrder)
+    const [sortedOrder, setSortedOrder] = useState<string[]>([...cardOrder])
 
     const render = sortByOrder(
         cardList,

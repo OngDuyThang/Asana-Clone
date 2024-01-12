@@ -9,6 +9,7 @@ import { useValueByTheme } from 'hooks'
 import { DarkColor, LightColor } from 'types/theme'
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { cloneDeep } from 'lodash'
 
 interface ColumnProps {
     columnData: TColumn,
@@ -27,7 +28,7 @@ const Column: FC<ColumnProps> = ({
         isDragging
     } = useSortable({
         id: columnData.id,
-        data: { ...columnData }
+        data: cloneDeep(columnData)
     });
     const style = {
         transform: CSS.Translate.toString(transform),
