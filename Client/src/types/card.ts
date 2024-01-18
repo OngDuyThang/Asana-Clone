@@ -13,3 +13,5 @@ export type TCard = {
 }
 
 export type TCardReaction = Pick<TCard, 'memberIds' | 'comments' | 'attachments'>
+
+export const EMPTY_CARD = 'empty-card'

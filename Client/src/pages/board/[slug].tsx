@@ -1,4 +1,4 @@
-import BoardList from 'modules/Board/List'
+import Board from 'modules/Board'
 import { GetStaticPropsContext } from 'next'
 import { type FC } from 'react'
 import { TBoard } from 'types/board'
@@ -71,7 +71,7 @@ interface IProps {
 const BoardDetail_Page: FC<IProps> = ({
     boardData
 }) => {
-    return <BoardList boardData={boardData} />
+    return <Board boardData={boardData} />
 }
 
 export default BoardDetail_Page

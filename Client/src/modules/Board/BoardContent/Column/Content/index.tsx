@@ -1,9 +1,8 @@
 import { Card as CardComponent, Container, Div, Image } from 'components'
-import { useState, type FC } from 'react'
+import { type FC, CSSProperties } from 'react'
 import styles from './index.module.less'
 import { actions } from './actions'
-import { TCard } from 'types/card'
-import { sortByOrder } from 'utils/helpers'
+import { EMPTY_CARD, TCard } from 'types/card'
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities';
 import { cloneDeep } from 'lodash'
@@ -20,18 +19,23 @@ export const Card = ({ cardData }: { cardData: TCard }) => {
         id: cardData.id,
         data: cloneDeep(cardData)
     });
-    const style = {
+    const style: CSSProperties = {
         transform: CSS.Translate.toString(transform),
         transition,
         touchAction: 'none',
-        opacity: isDragging ? '0.5' : '1'
+        opacity: isDragging ? '0.5' : '1',
+        ...(cardData.id.includes(EMPTY_CARD) ? {
+            visibility: 'hidden',
+            height: '0',
+            pointerEvents: 'none'
+        } : null)
     };
 
     const cover = (src: string | null) => src ? (
         <Div className={styles.cover}>
             <Image
                 src={src}
-                alt='test'
+                alt='cover-image'
                 fit='cover'
             />
         </Div>
@@ -58,32 +62,24 @@ export const Card = ({ cardData }: { cardData: TCard }) => {
 
 interface ContentProps {
     cardList: TCard[];
-    cardOrder: string[]
 }
 
 const Content: FC<ContentProps> = ({
-    cardList,
-    cardOrder
+    cardList
 }) => {
-    const [sortedOrder, setSortedOrder] = useState<string[]>([...cardOrder])
-
-    const render = sortByOrder(
-        cardList,
-        sortedOrder,
-        'id'
-    ).map(card => (
+    const render = cardList.map(card => (
         <Card cardData={card} key={card.id} />
     ))
 
     return (
-        <Container flex direct='column' gap='16' className={styles.content}>
-            <SortableContext
-                items={cardList.map(card => card.id)}
-                strategy={verticalListSortingStrategy}
-            >
+        <SortableContext
+            items={cardList.map(card => card.id)}
+            strategy={verticalListSortingStrategy}
+        >
+            <Container flex direct='column' gap='16' className={styles.content}>
                 {render}
-            </SortableContext>
-        </Container>
+            </Container>
+        </SortableContext>
     )
 }
 

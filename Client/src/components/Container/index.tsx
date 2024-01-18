@@ -1,4 +1,4 @@
-import { forwardRef, CSSProperties, ReactNode, HTMLProps } from "react";
+import { forwardRef, CSSProperties, ReactNode, ComponentPropsWithRef } from "react";
 import styles from './index.module.less'
 import clsx from "clsx";
 import { Div } from "components";
@@ -8,7 +8,7 @@ type layout = 'start' | 'center' | 'end'
 type justify = 'between' | 'evenly' | 'around'
 type direction = 'row' | 'column' | 'row-reverse' | 'column-reverse'
 
-interface ContainerProps extends HTMLProps<HTMLDivElement> {
+interface ContainerProps extends ComponentPropsWithRef<'div'> {
     children: ReactNode;
     width?: percen;
     height?: percen;
@@ -17,6 +17,7 @@ interface ContainerProps extends HTMLProps<HTMLDivElement> {
     justify?: layout | justify;
     align?: layout;
     gap?: string | number;
+    wrap?: boolean;
     className?: string;
     color?: string;
     background?: string;
@@ -33,6 +34,7 @@ const Container = forwardRef<HTMLDivElement, ContainerProps>(({
     justify,
     align,
     gap,
+    wrap = false,
     className,
     color,
     background,
@@ -49,6 +51,7 @@ const Container = forwardRef<HTMLDivElement, ContainerProps>(({
                 flex && styles[`direct-${direct}`],
                 justify && styles[`justify-${justify}`],
                 align && styles[`align-${align}`],
+                wrap && styles.wrap,
                 className
             )}
             style={{

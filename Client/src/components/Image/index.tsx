@@ -1,10 +1,10 @@
 import { type FC, useState } from 'react'
-import { default as NextImage, ImageProps as NextImageProps } from "next/image"
+import { default as NextImage } from "next/image"
 import { MAX_LIMIT_NUMBER } from 'utils/constants'
 import { Div, SkeletonElement } from 'components';
 import clsx from 'clsx';
 
-interface ImageProps extends NextImageProps {
+interface ImageProps {
     src: string;
     alt: string;
     fit?: 'contain' | 'cover' | 'fill';
@@ -15,8 +15,7 @@ const Image: FC<ImageProps> = ({
     src,
     alt,
     fit = 'contain',
-    className,
-    ...props
+    className
 }) => {
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [isError, setIsError] = useState<boolean>(false)
@@ -39,7 +38,6 @@ const Image: FC<ImageProps> = ({
                 loading='lazy'
                 onLoad={() => setIsLoading(false)}
                 onError={() => setIsError(true)}
-                {...props}
             />
         </Div>
     )

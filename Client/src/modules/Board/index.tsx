@@ -1,15 +1,16 @@
 
 import { Container } from 'components'
 import { type FC } from 'react'
-import BoardBar from '../Components/BoardBar'
-import BoardContent from '../Components/BoardContent'
 import { TBoard } from 'types/board'
+import BoardBar from './BoardBar'
+import BoardContent from './BoardContent'
+import { sortByOrder } from 'utils/helpers'
 
-interface BoardListProps {
+interface BoardProps {
     boardData: TBoard
 }
 
-const BoardList: FC<BoardListProps> = ({
+const Board: FC<BoardProps> = ({
     boardData
 }) => {
     return (
@@ -20,11 +21,15 @@ const BoardList: FC<BoardListProps> = ({
                 type={boardData.type}
             />
             <BoardContent
-                columnList={boardData.columns}
-                columnOrder={boardData.columnOrderIds}
+                columnList={sortByOrder(
+                    boardData.columns,
+                    boardData.columnOrderIds,
+                    'id'
+                )}
+                columnOrder={[...boardData.columnOrderIds]}
             />
         </Container>
     )
 }
 
-export default BoardList
+export default Board

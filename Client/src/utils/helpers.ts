@@ -12,3 +12,19 @@ export const sortByOrder = (
         orderRule.indexOf(a?.[key]) - orderRule.indexOf(b?.[key])
     )
 }
+
+export const moveItem = (
+    arr: any[],
+    from: number,
+    to: number
+) => {
+    const res = [...arr]
+    if (from >= 0 && to < arr.length) {
+        res.splice(
+            to,
+            0,
+            res.splice(from, 1)[0]
+        )
+    }
+    return res
+}

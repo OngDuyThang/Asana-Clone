@@ -21,7 +21,7 @@ const Icon = (key: Key) => {
 
 export const actions = (data: TCardReaction) => {
     return Object.keys(data).reduce<ReactNode[]>((res, item) => {
-        if (data[item as Key].length) {
+        if (data[item as Key]?.length) {
             res.push(
                 <Space key={item} size={8} align='center'>
                     {Icon(item as Key)}

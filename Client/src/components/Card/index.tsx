@@ -1,4 +1,4 @@
-import { forwardRef, type FC } from 'react'
+import { forwardRef } from 'react'
 import {
     Card as AntdCard,
     CardProps as AntdCardProps,

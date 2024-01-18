@@ -1,6 +1,6 @@
-import { ReactNode, CSSProperties, forwardRef, HTMLProps } from 'react'
+import { ReactNode, CSSProperties, forwardRef, ComponentPropsWithRef } from 'react'
 
-interface DivProps extends HTMLProps<HTMLDivElement> {
+interface DivProps extends ComponentPropsWithRef<'div'> {
     children: ReactNode;
     className?: string;
     style?: CSSProperties;

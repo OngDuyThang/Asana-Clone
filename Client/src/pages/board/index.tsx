@@ -1,9 +1,14 @@
-import BoardList from 'modules/Board/List'
+import { Container } from 'components'
 import { GetStaticPropsContext } from 'next'
+
 import { type FC } from 'react'
 
 const BoardList_Page: FC = () => {
-    return <BoardList />
+    return (
+        <Container>
+            AAA
+        </Container>
+    )
 }
 
 export default BoardList_Page

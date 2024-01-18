@@ -1,5 +1,5 @@
 import { Container } from 'components'
-import { type FC } from 'react'
+import { CSSProperties, type FC } from 'react'
 import { TColumn } from 'types/column'
 import Header from './Header'
 import Content from './Content'
@@ -19,6 +19,7 @@ const Column: FC<ColumnProps> = ({
     columnData
 }) => {
     const columnBg = useValueByTheme(LightColor.board_column, DarkColor.board_column)
+    const color = useValueByTheme(LightColor.text, DarkColor.text)
     const {
         attributes,
         listeners,
@@ -30,11 +31,12 @@ const Column: FC<ColumnProps> = ({
         id: columnData.id,
         data: cloneDeep(columnData)
     });
-    const style = {
+    const style: CSSProperties = {
         transform: CSS.Translate.toString(transform),
         transition,
         touchAction: 'none',
-        opacity: isDragging ? '0.5' : '1'
+        opacity: isDragging ? '0.5' : '1',
+        color
     };
 
     return (
@@ -50,10 +52,7 @@ const Column: FC<ColumnProps> = ({
                 {...listeners}
             >
                 <Header title={columnData.title} />
-                <Content
-                    cardList={columnData.cards}
-                    cardOrder={columnData.cardOrderIds}
-                />
+                <Content cardList={[...columnData.cards]} />
                 <Footer />
             </Container>
         </Container>
