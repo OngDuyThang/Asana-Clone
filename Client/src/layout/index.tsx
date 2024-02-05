@@ -1,16 +1,26 @@
 import {
     ConfigProvider as AntdConfigProvider,
     Layout as AntdLayout,
-    ThemeConfig
+    ThemeConfig,
+    notification
 } from 'antd'
-import { useState, type FC, type ReactNode, useEffect } from "react"
-import Header from "./Header"
+import { NotificationInstance } from 'antd/es/notification/interface';
+import { useState, type FC, type ReactNode, useEffect, createContext, lazy, Suspense } from "react"
+// import Header from "./Header"
+// import Content from './Content';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { setSystemTheme } from 'store/system/slice';
 import { lightTheme, darkTheme } from 'utils/theme';
 import { ThemeEnum } from 'types/theme';
 import styles from './index.module.less'
-import Content from './Content';
+import { setAccessToken } from 'store/user/slice';
+import { getAccessToken } from 'utils/helpers';
+import { LoadingScreen } from 'components';
+const Header = lazy(() => import('./Header'))
+const Content = lazy(() => import('./Content'))
+
+export interface ToastInstance extends NotificationInstance {}
+export const ToastContext = createContext<ToastInstance | null>(null)
 
 export const {
     Header: AntdHeader,
@@ -18,7 +28,7 @@ export const {
 } = AntdLayout
 
 interface LayoutProps {
-    children: ReactNode;
+    children: ReactNode
 }
 
 const Layout: FC<LayoutProps> = ({
@@ -27,6 +37,7 @@ const Layout: FC<LayoutProps> = ({
     const dispatch = useAppDispatch()
     const { theme: reduxTheme } = useAppSelector(state => state.system)
     const [theme, setTheme] = useState<ThemeConfig>()
+    const [api, contextHolder] = notification.useNotification();
 
     useEffect(() => {
         switch (reduxTheme) {
@@ -58,13 +69,30 @@ const Layout: FC<LayoutProps> = ({
         }
     }, [])
 
+    const storageEvent = () => {
+        const accessToken = getAccessToken()
+        dispatch(setAccessToken(accessToken))
+    }
+
+    useEffect(() => {
+        window.addEventListener('storage', storageEvent)
+        return () => {
+            window.removeEventListener('storage', storageEvent)
+        }
+    }, [])
+
     return (
         <AntdConfigProvider theme={theme}>
+            {contextHolder}
             <AntdLayout className={styles.root}>
-                <Header />
-                <Content>
-                    {children}
-                </Content>
+                <ToastContext.Provider value={api}>
+                    <Suspense fallback={<LoadingScreen />}>
+                        <Header />
+                        <Content>
+                            {children}
+                        </Content>
+                    </Suspense>
+                </ToastContext.Provider>
             </AntdLayout>
         </AntdConfigProvider>
     )

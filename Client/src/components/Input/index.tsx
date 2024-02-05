@@ -58,3 +58,21 @@ const Input: FC<InputProps> = ({
 }
 
 export default Input
+
+interface PasswordProps extends InputProps {
+    visibilityToggle?: boolean
+}
+
+export const Password: FC<PasswordProps> = ({
+    visibilityToggle = true,
+    className,
+    ...props
+}) => {
+    return (
+        <AntdPassword
+            visibilityToggle={visibilityToggle}
+            className={clsx(styles.root, className)}
+            {...props}
+        />
+    )
+}

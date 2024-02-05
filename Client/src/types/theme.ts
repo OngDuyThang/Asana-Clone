@@ -9,12 +9,14 @@ const LIGHT_TEXT = '#515151'
 const LIGHT_BACKGROUND = '#d35400'
 const LIGHT_BOARDBAR = '#ffffff'
 const LIGHT_BOARD_COLUMN = '#ffffff'
+const LIGHT_LOADING_BACKGROUND = '#ffffff'
 
 const DARK_PRIMARY = '#2c3e50'
 const DARK_TEXT = '#ffffff'
 const DARK_BACKGROUND = '#2c3e50'
 const DARK_BOARDBAR = '#34495e'
 const DARK_BOARD_COLUMN = '#323949'
+const DARK_LOADING_BACKGROUND = '#2c3e50'
 
 // COMMON USE
 export enum LightColor {
@@ -22,7 +24,8 @@ export enum LightColor {
     text = LIGHT_TEXT,
     background = LIGHT_BACKGROUND,
     boardbar = LIGHT_BOARDBAR,
-    board_column = LIGHT_BOARD_COLUMN
+    board_column = LIGHT_BOARD_COLUMN,
+    loading_background = LIGHT_LOADING_BACKGROUND
 }
 
 export enum DarkColor {
@@ -30,7 +33,8 @@ export enum DarkColor {
     text = DARK_TEXT,
     background = DARK_BACKGROUND,
     boardbar = DARK_BOARDBAR,
-    board_column = DARK_BOARD_COLUMN
+    board_column = DARK_BOARD_COLUMN,
+    loading_background = DARK_LOADING_BACKGROUND
 }
 
 // SPECIFIC COMPONENT
@@ -72,4 +76,9 @@ export enum CardColor {
     dark_primary = '#cccccc',
     dark_card = '#212129',
     dark_text = DARK_TEXT,
+}
+
+export enum SpinColor {
+    light_primary = LIGHT_PRIMARY,
+    dark_primary = '#ffffff',
 }

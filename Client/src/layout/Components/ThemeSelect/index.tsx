@@ -2,12 +2,12 @@ import { Space } from "antd";
 import { Option, Select, Text } from "components"
 import type { FC } from "react"
 import { themes } from "./options";
-import { useAppDispatch } from "hooks";
+import { useAppDispatch, useAppSelector } from "hooks";
 import { setTheme, themeBySystem } from "store/system/slice";
 import { ThemeEnum } from "types/theme";
-import { FaSun } from "react-icons/fa";
+import { FaMoon, FaSun, FaCaretDown } from "react-icons/fa";
+import { FaDisplay } from "react-icons/fa6";
 import { capitalize } from "lodash";
-import { FaCaretDown } from "react-icons/fa";
 import { DefaultOptionType } from "antd/es/select";
 import { isDarkModeSystem } from "utils/theme";
 
@@ -19,6 +19,7 @@ const ThemeSelect: FC<IProps> = ({
     className
 }) => {
     const dispatch = useAppDispatch()
+    const { theme: reduxTheme, systemTheme } = useAppSelector(state => state.system)
 
     const handleSetTheme = (value: ThemeEnum) => {
         if (value !== ThemeEnum.system) {
@@ -42,12 +43,14 @@ const ThemeSelect: FC<IProps> = ({
     ))
 
     const defaultValue: DefaultOptionType = {
-        value: ThemeEnum.light,
+        value: systemTheme ? ThemeEnum.system : reduxTheme,
         label: (
             <Space align="center" size={8}>
-                <FaSun className="w-3 h-3" />
+                {systemTheme ? <FaDisplay className="w-3 h-3" /> :
+                    reduxTheme === ThemeEnum.light ? <FaSun className="w-3 h-3" /> :
+                        <FaMoon className="w-3 h-3" />}
                 <Text tag="p" fontSize="12px" fontWeight='600'>
-                    {capitalize(ThemeEnum.light)}
+                    {capitalize(systemTheme ? ThemeEnum.system : reduxTheme)}
                 </Text>
             </Space>
         )

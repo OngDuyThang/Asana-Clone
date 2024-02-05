@@ -28,3 +28,54 @@ export const moveItem = (
     }
     return res
 }
+
+export const getRoot = () => {
+    if (typeof window !== 'undefined') {
+        const root = localStorage.getItem('persist:root')
+        return root
+    }
+}
+
+export const getCurrentUser = () => {
+    const root = getRoot()
+    if (root) {
+        const user = JSON.parse(root)?.user ? JSON.parse(JSON.parse(root).user) : {}
+        return user
+    }
+    return {}
+}
+
+export const getAccessToken = (): string => {
+    const user = getCurrentUser()
+    return user?.accessToken ? user.accessToken : ''
+}
+
+export const replaceAccessToken = (newToken: string) => {
+    const user = getCurrentUser()
+    if (user) {
+        user.accessToken = newToken
+        const root = getRoot()
+        if (root && JSON.parse(root)?.user) {
+            const newRoot = JSON.parse(root)
+            newRoot.user = JSON.stringify(user)
+
+            localStorage.setItem('persist:root', JSON.stringify(newRoot))
+            window.dispatchEvent(new Event('storage'))
+        }
+    }
+}
+
+export const autoLogout = () => {
+    if (typeof window !== 'undefined') {
+        alert('Your session has been expired, ready to sign out')
+        localStorage.clear()
+        window.location.href = window.location.href
+    }
+}
+
+export const userLogout = () => {
+    if (typeof window !== 'undefined') {
+        localStorage.clear()
+        window.location.href = window.location.href
+    }
+}

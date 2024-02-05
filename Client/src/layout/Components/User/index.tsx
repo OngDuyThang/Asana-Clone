@@ -1,6 +1,8 @@
 import { Div, Image, Dropdown } from 'components'
+import { capitalize } from 'lodash';
 import { type FC } from 'react'
 import { TDropdownItems } from 'types/dropdown';
+import { userLogout } from 'utils/helpers';
 
 const items: TDropdownItems = [
     {
@@ -12,8 +14,9 @@ const items: TDropdownItems = [
         key: '2',
     },
     {
-        label: '3rd menu item',
+        label: capitalize('log out'),
         key: '3',
+        onClick: () => { userLogout() }
     },
 ];
 
@@ -21,7 +24,7 @@ const User: FC = () => {
     return (
         <Dropdown
             items={items}
-            onClick={() => { }}
+            onClick={() => {}}
         >
             <Div className='w-[30px] h-[30px] rounded-full overflow-hidden'>
                 <Image

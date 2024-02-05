@@ -1,4 +1,3 @@
-
 import { Container } from 'components'
 import { type FC } from 'react'
 import { TBoard } from 'types/board'

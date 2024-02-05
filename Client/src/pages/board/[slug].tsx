@@ -1,5 +1,7 @@
+import { LoadingScreen } from 'components'
 import Board from 'modules/Board'
 import { GetStaticPropsContext } from 'next'
+import { useRouter } from 'next/router'
 import { type FC } from 'react'
 import { TBoard } from 'types/board'
 
@@ -71,6 +73,11 @@ interface IProps {
 const BoardDetail_Page: FC<IProps> = ({
     boardData
 }) => {
+    const router = useRouter()
+
+    if (router.isFallback) {
+        return <LoadingScreen />
+    }
     return <Board boardData={boardData} />
 }
 
@@ -83,7 +90,7 @@ export const getStaticPaths = () => {
                 params: { slug: '1' }
             }
         ],
-        fallback: 'blocking'
+        fallback: true
     }
 }
 

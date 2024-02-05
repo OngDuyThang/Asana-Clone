@@ -1,4 +1,4 @@
-import type { FC } from "react"
+import { type FC } from "react"
 import styles from './index.module.less'
 import { Container, Button } from "components"
 import { IoFilter } from "react-icons/io5";
@@ -6,9 +6,13 @@ import { IoMdPersonAdd } from "react-icons/io";
 import { MdDashboard, MdPublic, MdPublicOff } from "react-icons/md";
 import { Avatar } from "antd";
 import { capitalize } from "lodash";
-import { useValueByTheme } from "hooks";
+import { useAppSelector, useValueByTheme } from "hooks";
 import { DarkColor, LightColor } from "types/theme";
 import { TBoardAccess } from "types/board";
+import { axiosInstance } from "api/axios";
+import { useGetBoardById } from "api/board";
+import { useRouter } from "next/router";
+import { getAccessToken, replaceAccessToken } from "utils/helpers";
 
 interface BoardBarProps {
     title: string;
@@ -21,17 +25,28 @@ const BoardBar: FC<BoardBarProps> = ({
     description,
     type,
 }) => {
+    const router = useRouter()
     const bgColor = useValueByTheme(LightColor.boardbar, DarkColor.boardbar)
     const iconCss: string = 'w-4 h-4'
     const accessIcon = type === 'public'
         ? <MdPublic className={iconCss} />
         : <MdPublicOff className={iconCss} />
 
+    const testClick = async () => {
+        // const { data } = await axiosInstance.post('/auth/refresh')
+        // console.log(data)
+
+        // const { data } = await axiosInstance.post('/auth/testabc')
+        // console.log(data)
+    }
+
+    // const { data } = useGetBoardById(router.pathname)
+
     const Left = (
         <Container width="50" height="100" flex align="center" gap='16'>
             <Button
                 type="text"
-                onClick={() => { }}
+                onClick={() => {}}
                 icon={<MdDashboard className={iconCss} />}
                 fontWeight='600'
                 isBoardbarButton
@@ -40,7 +55,7 @@ const BoardBar: FC<BoardBarProps> = ({
             </Button>
             <Button
                 type="text"
-                onClick={() => { }}
+                onClick={() => {}}
                 icon={accessIcon}
                 fontWeight='600'
                 isBoardbarButton
@@ -49,7 +64,7 @@ const BoardBar: FC<BoardBarProps> = ({
             </Button>
             <Button
                 type="text"
-                onClick={() => { }}
+                onClick={() => {}}
                 icon={<IoFilter className={iconCss} />}
                 fontWeight='600'
                 isBoardbarButton
@@ -70,7 +85,7 @@ const BoardBar: FC<BoardBarProps> = ({
                 <Avatar style={{ backgroundColor: '#1677ff' }} icon={<>A</>} />
             </Avatar.Group>
             <Button
-                onClick={() => { }}
+                onClick={testClick}
                 icon={<IoMdPersonAdd className={iconCss} />}
                 fontWeight='600'
                 isBoardbarButton
