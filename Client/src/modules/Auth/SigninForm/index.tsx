@@ -28,15 +28,15 @@ const SigninForm: FC<IProps> = ({
     const [form] = Form.useForm();
     const { mutate: handleSignin } = useMutation(signin, {
         onSuccess: (data) => {
-            if (data.data) {
-                dispatch(signinAction({
-                    ...data.data
-                }))
-                toast.success({ message: capitalize('login successfully.') })
-                form.resetFields()
+            if (!data?.data) {
+                toast.error({ message: data.message })
                 return
             }
-            toast.error({ message: data.message })
+            dispatch(signinAction({
+                ...data.data
+            }))
+            toast.success({ message: capitalize('login successfully.') })
+            form.resetFields()
         },
         retry: false
     })
@@ -65,7 +65,7 @@ const SigninForm: FC<IProps> = ({
             >
                 <Item
                     name="username"
-                    rules={[{ required: true, message: 'Please input your username!' }]}
+                    rules={[{ required: true, message: capitalize('please input your username!') }]}
                     validateTrigger='onBlur'
                 >
                     <Input
@@ -78,7 +78,7 @@ const SigninForm: FC<IProps> = ({
 
                 <Item
                     name="password"
-                    rules={[{ required: true, message: 'Please input your password!' }]}
+                    rules={[{ required: true, message: capitalize('please input your password!') }]}
                     validateTrigger='onBlur'
                 >
                     <Password

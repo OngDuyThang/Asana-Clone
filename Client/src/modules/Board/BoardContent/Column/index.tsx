@@ -51,9 +51,12 @@ const Column: FC<ColumnProps> = ({
                 style={{ background: columnBg }}
                 {...listeners}
             >
-                <Header title={columnData.title} />
+                <Header
+                    title={columnData.title}
+                    columnId={columnData.id}
+                />
                 <Content cardList={[...columnData.cards]} />
-                <Footer />
+                <Footer columnId={columnData.id} />
             </Container>
         </Container>
     )

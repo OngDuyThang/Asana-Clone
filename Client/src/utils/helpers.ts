@@ -68,8 +68,8 @@ export const replaceAccessToken = (newToken: string) => {
 export const autoLogout = () => {
     if (typeof window !== 'undefined') {
         alert('Your session has been expired, ready to sign out')
-        localStorage.clear()
         window.location.href = window.location.href
+        localStorage.clear()
     }
 }
 
@@ -78,4 +78,12 @@ export const userLogout = () => {
         localStorage.clear()
         window.location.href = window.location.href
     }
+}
+
+export const isSession = (): boolean => {
+    const user = getCurrentUser()
+    if (user) {
+        return user.isSession
+    }
+    return false
 }

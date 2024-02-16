@@ -19,3 +19,8 @@ export enum BoardApiKey {
     PATCH = 'PATCH_BOARD',
     DELETE = 'DELETE_BOARD'
 }
+
+export type MoveColumnRequest = {
+    id: string,
+    columnOrderIds: string[]
+}

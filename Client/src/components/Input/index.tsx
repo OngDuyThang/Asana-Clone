@@ -1,8 +1,9 @@
-import { type FC } from 'react'
+import { type FC, forwardRef } from 'react'
 import {
     Input as AntdInput,
     InputProps as AntdInputProps,
-    ConfigProvider as AntdConfigProvider
+    InputRef as AntdInputRef,
+    ConfigProvider as AntdConfigProvider,
 } from 'antd'
 import { TInputProps, TInputPropsExcept } from 'types/input'
 import styles from './index.module.less'
@@ -22,7 +23,7 @@ interface InputProps extends
     isHeaderInput?: boolean
 }
 
-const Input: FC<InputProps> = ({
+const Input = forwardRef<AntdInputRef, InputProps>(({
     className,
     placeholder,
     defaultValue,
@@ -35,7 +36,7 @@ const Input: FC<InputProps> = ({
     onPressEnter,
     isHeaderInput = false,
     ...props
-}) => {
+}, ref) => {
     const theme = useValueByTheme(lightTheme, darkTheme)
 
     return (
@@ -52,10 +53,11 @@ const Input: FC<InputProps> = ({
                 size={size}
                 onPressEnter={onPressEnter}
                 {...props}
+                ref={ref}
             />
         </AntdConfigProvider>
     )
-}
+})
 
 export default Input
 
@@ -68,11 +70,15 @@ export const Password: FC<PasswordProps> = ({
     className,
     ...props
 }) => {
+    const theme = useValueByTheme(lightTheme, darkTheme)
+
     return (
-        <AntdPassword
-            visibilityToggle={visibilityToggle}
-            className={clsx(styles.root, className)}
-            {...props}
-        />
+        <AntdConfigProvider theme={theme}>
+            <AntdPassword
+                visibilityToggle={visibilityToggle}
+                className={clsx(styles.root, className)}
+                {...props}
+            />
+        </AntdConfigProvider>
     )
 }

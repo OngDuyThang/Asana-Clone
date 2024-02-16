@@ -48,7 +48,7 @@ export enum ButtonColor {
 }
 
 export enum InputColor {
-    light_primary = LIGHT_PRIMARY,
+    light_primary = LIGHT_TEXT,
     light_text = LIGHT_TEXT,
     light_border = LIGHT_TEXT,
     light_placeholder = '#cccccc',
@@ -81,4 +81,11 @@ export enum CardColor {
 export enum SpinColor {
     light_primary = LIGHT_PRIMARY,
     dark_primary = '#ffffff',
+}
+
+export enum ModalColor {
+    light_content_bg = LIGHT_BOARD_COLUMN,
+    light_title = LIGHT_TEXT,
+    dark_content_bg = DARK_BOARD_COLUMN,
+    dark_title = DARK_TEXT
 }

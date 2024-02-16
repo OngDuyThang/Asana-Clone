@@ -2,6 +2,19 @@ import { Active, DropAnimation, Over, defaultDropAnimationSideEffects } from "@d
 import { remove } from "lodash";
 import { EMPTY_CARD, TCard } from "types/card";
 import { TColumn } from "types/column";
+import { moveItem } from "./helpers";
+
+export const moveCardSameColumn = (
+    activeCard: TCard,
+    currentColumn: TColumn,
+    over: Over
+) => {
+    const oldIndex = currentColumn.cards.findIndex(card => card.id === activeCard.id);
+    const newIndex = currentColumn.cards.findIndex(card => card.id === over.id);
+
+    currentColumn.cards = [...moveItem(currentColumn.cards, oldIndex, newIndex)]
+    currentColumn.cardOrderIds = [...currentColumn.cards.map(card => card.id)]
+}
 
 export const moveCardBetweenColumns = (
     activeCard: TCard,
@@ -48,6 +61,30 @@ export const createCardId = (
     boardId: string
 ) => `${format}-${columnId}-${boardId}`
 
+export const addEmptyCard = (columnList: TColumn[]) => {
+    if (hasEmptyCardList(columnList).length) {
+        hasEmptyCardList(columnList).forEach(column => {
+            column.cards.push({
+                id: createCardId(EMPTY_CARD, column.id, column.boardId),
+                boardId: column.boardId,
+                columnId: column.id
+            } as TCard)
+            column.cardOrderIds.push(createCardId(EMPTY_CARD, column.id, column.boardId))
+        })
+    }
+}
+
+export const removeEmptyCard = (columnList: TColumn[]) => {
+    if (hasEmptyCard(columnList).length) {
+        hasEmptyCard(columnList).forEach(column => {
+            if (column.cards.length > 1) {
+                remove(column.cards, card => card.id.includes(EMPTY_CARD))
+                remove(column.cardOrderIds, id => id.includes(EMPTY_CARD))
+            }
+        })
+    }
+}
+
 export const dropAnimation: DropAnimation = {
     sideEffects: defaultDropAnimationSideEffects({
         styles: {
@@ -57,3 +94,8 @@ export const dropAnimation: DropAnimation = {
         },
     }),
 };
+
+export const validateEmptyCard = (ids: string[]) => {
+    remove(ids, id => id.includes(EMPTY_CARD))
+    return ids
+}

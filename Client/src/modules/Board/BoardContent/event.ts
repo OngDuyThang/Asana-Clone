@@ -1,9 +1,14 @@
 import { DragEndEvent, DragOverEvent, DragStartEvent } from "@dnd-kit/core"
-import { cloneDeep, remove } from "lodash"
-import { EMPTY_CARD, TCard } from "types/card"
-import { TColumn } from "types/column"
-import { createCardId, hasEmptyCard, hasEmptyCardList, isCard, moveCardBetweenColumns } from "utils/board"
+import { cloneDeep } from "lodash"
+import { UseMutateFunction } from "react-query"
+import { TApiResponse } from "types/api"
+import { MoveColumnRequest } from "types/board"
+import { TCard } from "types/card"
+import { MoveCardRequest, TColumn } from "types/column"
+import { addEmptyCard, isCard, moveCardBetweenColumns, moveCardSameColumn, removeEmptyCard, validateEmptyCard } from "utils/board"
 import { moveItem } from "utils/helpers"
+
+let prevColumnId: string = ''
 
 export const dragStart = (
     event: DragStartEvent,
@@ -38,17 +43,31 @@ export const dragOver = (
             card => card.id === over.id // || card.columnId === over.id
         )
     )
-    if (!currentColumn || !prevColumn || currentColumn.id === prevColumn.id) return
+    if (!currentColumn || !prevColumn) return
 
-    moveCardBetweenColumns(
-        activeCard,
-        prevColumn,
-        currentColumn,
-        active,
-        over
-    )
+    if (currentColumn.id === prevColumn.id) {
+        moveCardSameColumn(
+            activeCard,
+            currentColumn,
+            over
+        )
+    }
+
+    if (currentColumn.id !== prevColumn.id) {
+        prevColumnId = prevColumn.id
+        moveCardBetweenColumns(
+            activeCard,
+            prevColumn,
+            currentColumn,
+            active,
+            over
+        )
+    }
 
     setActiveItem(cloneDeep(activeCard))
+
+    // PREVENT EMPTY CARD LIST BUG BY ADD EMPTY CARD
+    addEmptyCard(columnList)
 }
 
 export const dragEnd = (
@@ -57,7 +76,8 @@ export const dragEnd = (
     setActiveItem: (value: TColumn | TCard | null) => void,
     columnList: TColumn[],
     setColumnList: (value: TColumn[]) => void,
-    setColumnOrder: (value: string[]) => void
+    handleMoveColumn: UseMutateFunction<TApiResponse, unknown, MoveColumnRequest, unknown>,
+    handleMoveCard: UseMutateFunction<TApiResponse, unknown, MoveCardRequest, unknown>
 ) => {
     const { active, over } = event
     if (!active || !over || !activeItem) return
@@ -66,21 +86,31 @@ export const dragEnd = (
         const activeCard = cloneDeep(activeItem as TCard)
 
         // DECLARE PREVIOUS COLUMN AND CURRENT DRAG OVER COLUMN
-        const prevColumn = columnList.find(column => column.id === activeCard.columnId)
         const currentColumn = columnList.find(
             column => column.cards.find(
                 card => card.id === over.id // || card.columnId === over.id
             )
         )
+        const prevColumn = prevColumnId ?
+            columnList.find(column => column.id === prevColumnId) :
+            columnList.find(column => column.id === activeCard.columnId)
+
         if (!currentColumn || !prevColumn) return
 
         // SAME COLUMN, DIFFERENT COLUMN
         if (currentColumn.id === prevColumn.id) {
-            const oldIndex = currentColumn.cards.findIndex(card => card.id === activeCard.id);
-            const newIndex = currentColumn.cards.findIndex(card => card.id === over.id);
-
-            currentColumn.cards = [...moveItem(currentColumn.cards, oldIndex, newIndex)]
-            currentColumn.cardOrderIds = [...currentColumn.cards.map(card => card.id)]
+            moveCardSameColumn(
+                activeCard,
+                currentColumn,
+                over
+            )
+            handleMoveCard({
+                currentId: currentColumn.id,
+                prevId: currentColumn.id,
+                cardId: activeCard.id,
+                currentCardOrderIds: validateEmptyCard([...currentColumn.cardOrderIds]),
+                prevCardOrderIds: validateEmptyCard([...currentColumn.cardOrderIds])
+            })
         } else {
             moveCardBetweenColumns(
                 activeCard,
@@ -89,7 +119,16 @@ export const dragEnd = (
                 active,
                 over
             )
+            handleMoveCard({
+                currentId: currentColumn.id,
+                prevId: prevColumn.id,
+                cardId: activeCard.id,
+                currentCardOrderIds: validateEmptyCard([...currentColumn.cardOrderIds]),
+                prevCardOrderIds: validateEmptyCard([...prevColumn.cardOrderIds])
+            })
         }
+
+        prevColumnId = ''
     }
 
     if (!isCard(activeItem)) {
@@ -97,41 +136,19 @@ export const dragEnd = (
             const oldIndex = columnList.findIndex(column => column.id === active.id);
             const newIndex = columnList.findIndex(column => column.id === over.id);
 
-            const newColumnList = [...moveItem(columnList, oldIndex, newIndex)]
+            const newColumnList: TColumn[] = [...moveItem(columnList, oldIndex, newIndex)]
             setColumnList(newColumnList)
-            setColumnOrder([...newColumnList.map(column => column.id)])
-            // setColumnList((prev) => {
-            //     const oldIndex = prev.findIndex(column => column.id === active.id);
-            //     const newIndex = prev.findIndex(column => column.id === over.id);
-
-            //     prev = [...moveItem(prev, oldIndex, newIndex)];
-            //     setColumnOrder([...prev.map(column => column.id)])
-
-            //     return prev
-            // });
+            handleMoveColumn({
+                id: newColumnList[0].boardId,
+                columnOrderIds: [...newColumnList.map(column => column.id)]
+            })
         }
     }
 
     setActiveItem(null)
 
     // PREVENT EMPTY CARD LIST BUG BY ADD EMPTY CARD
-    if (hasEmptyCardList(columnList).length) {
-        hasEmptyCardList(columnList).forEach(column => {
-            column.cards.push({
-                id: createCardId(EMPTY_CARD, column.id, column.boardId),
-                boardId: column.boardId,
-                columnId: column.id
-            } as TCard)
-            column.cardOrderIds.push(createCardId(EMPTY_CARD, column.id, column.boardId))
-        })
-    }
+    addEmptyCard(columnList)
     // DELETE EMPTY CARD WHEN ADD CARD
-    if (hasEmptyCard(columnList).length) {
-        hasEmptyCard(columnList).forEach(column => {
-            if (column.cards.length > 1) {
-                remove(column.cards, card => card.id.includes(EMPTY_CARD))
-                remove(column.cardOrderIds, id => id.includes(EMPTY_CARD))
-            }
-        })
-    }
+    removeEmptyCard(columnList)
 }

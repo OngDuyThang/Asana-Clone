@@ -6,8 +6,6 @@ import {
 } from 'antd'
 import { NotificationInstance } from 'antd/es/notification/interface';
 import { useState, type FC, type ReactNode, useEffect, createContext, lazy, Suspense } from "react"
-// import Header from "./Header"
-// import Content from './Content';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { setSystemTheme } from 'store/system/slice';
 import { lightTheme, darkTheme } from 'utils/theme';

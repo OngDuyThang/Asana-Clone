@@ -1,20 +1,18 @@
-import { Button, Container } from 'components'
+import { Container } from 'components'
 import { type FC } from 'react'
-import { MdAddBox } from "react-icons/md";
-import { GrDrag } from "react-icons/gr";
-import { capitalize } from 'lodash';
+import AddCard from 'modules/Board/Components/AddCard';
 
-const Footer: FC = () => {
+interface FooterProps {
+    columnId: string
+}
+
+const Footer: FC<FooterProps> = ({
+    columnId
+}) => {
+
     return (
         <Container flex justify='between' align='center'>
-            <Button
-                onClick={() => {}}
-                icon={<MdAddBox className='w-4 h-4' />}
-                fontWeight='600'
-            >
-                {capitalize('add new card')}
-            </Button>
-            <GrDrag className='w-4 h-4 cursor-pointer' />
+            <AddCard columnId={columnId} />
         </Container>
     )
 }

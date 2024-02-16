@@ -11,3 +11,9 @@ export type SigninResponseDto = {
     email: string,
     accessToken: string
 }
+
+export type UserDto = {
+    id: string,
+    username: string,
+    avatar: string
+}

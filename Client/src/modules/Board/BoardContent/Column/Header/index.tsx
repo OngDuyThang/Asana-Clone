@@ -1,17 +1,38 @@
 import { Container, Text, Dropdown } from 'components'
 import { capitalize } from 'lodash'
-import { useMemo, type FC } from 'react'
+import { useMemo, type FC, useContext } from 'react'
 import { FaCaretDown } from 'react-icons/fa'
 import { items } from './items'
+import { useMutation } from 'react-query'
+import { deleteColumn } from 'api/column'
+import { ToastContext, ToastInstance } from 'layout'
+import { BoardContext, RefetchBoard } from 'modules/Board'
 
 interface HeaderProps {
-    title: string
+    title: string;
+    columnId: string
 }
 
 const Header: FC<HeaderProps> = ({
-    title
+    title,
+    columnId
 }) => {
-    const memoItems = useMemo(() => items, [])
+    const toast = useContext(ToastContext) as ToastInstance
+    const refetchBoard = useContext(BoardContext) as RefetchBoard
+    const { mutate: handleDelete } = useMutation(deleteColumn, {
+        onSuccess: (data) => {
+            if (data.statusCode !== 200) {
+                toast.error({ message: data.message })
+                return
+            }
+            toast.success({ message: capitalize('Remove column succesfully') })
+            refetchBoard()
+        }
+    })
+    const memoItems = useMemo(() => items(
+        columnId,
+        handleDelete
+    ), [])
 
     return (
         <Container flex justify='between' align='center'>
@@ -20,7 +41,7 @@ const Header: FC<HeaderProps> = ({
             </Text>
             <Dropdown
                 items={memoItems}
-                onClick={() => { }}
+                onClick={() => {}}
             >
                 <FaCaretDown className='w-4 h-4' />
             </Dropdown>

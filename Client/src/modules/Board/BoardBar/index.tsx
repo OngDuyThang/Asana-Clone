@@ -9,7 +9,7 @@ import { capitalize } from "lodash";
 import { useAppSelector, useValueByTheme } from "hooks";
 import { DarkColor, LightColor } from "types/theme";
 import { TBoardAccess } from "types/board";
-import { axiosInstance } from "api/axios";
+import { axiosClient } from "api/axios";
 import { useGetBoardById } from "api/board";
 import { useRouter } from "next/router";
 import { getAccessToken, replaceAccessToken } from "utils/helpers";
@@ -33,10 +33,10 @@ const BoardBar: FC<BoardBarProps> = ({
         : <MdPublicOff className={iconCss} />
 
     const testClick = async () => {
-        // const { data } = await axiosInstance.post('/auth/refresh')
+        // const { data } = await axiosClient.post('/auth/refresh')
         // console.log(data)
 
-        // const { data } = await axiosInstance.post('/auth/testabc')
+        // const { data } = await axiosClient.post('/auth/testabc')
         // console.log(data)
     }
 

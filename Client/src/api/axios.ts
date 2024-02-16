@@ -1,14 +1,17 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import { API_URL } from "../utils/constants";
 import { TApiResponse } from "types/api";
-import { getAccessToken, autoLogout, replaceAccessToken } from "utils/helpers";
+import { getAccessToken, autoLogout, replaceAccessToken, isSession } from "utils/helpers";
+import http from 'http';
+import https from 'https';
 
-export const axiosInstance = axios.create({
+// AXIOS INSTANCE FOR CLIENT
+export const axiosClient = axios.create({
     baseURL: API_URL,
     withCredentials: true
 });
 
-axiosInstance.interceptors.request.use(
+axiosClient.interceptors.request.use(
     function (config: InternalAxiosRequestConfig) {
         const accessToken = getAccessToken()
         if (accessToken) {
@@ -21,7 +24,7 @@ axiosInstance.interceptors.request.use(
     }
 )
 
-axiosInstance.interceptors.response.use(
+axiosClient.interceptors.response.use(
     function (res: AxiosResponse<TApiResponse>) {
         const { data, statusText, status } = res
 
@@ -41,24 +44,25 @@ axiosInstance.interceptors.response.use(
 
         if (response) {
             const { data: { message, statusCode } } = response
-            if (statusCode === 401) {
-                // CHECK IF 401 ERROR FROM /auth/refresh OR NOT BASE ON RT AND COOKIE EXISTENCE
-                // IF TRUE, CLEAR STORAGE AND RELOAD PAGE
-                if (url.includes('refresh')) {
-                    autoLogout()
-                    return
-                }
 
-                // IF FALSE, FETCH NEW ACCESS TOKEN
-                // REPLACE CURRENT ACCESS TOKEN IN STORAGE
-                // RE-FETCH PREVIOUS CALL
-                const res = await axiosInstance.post('/auth/refresh')
+            if (statusCode === 401 && !url.includes('refresh')) {
+                if (!isSession()) return
+
+                const res = await axiosClient.post('/auth/refresh')
                 if (res) {
                     const { data: { data: accessToken } } = res
                     replaceAccessToken(accessToken)
-                    return axiosInstance(originalConfig as AxiosRequestConfig)
+                    return axiosClient(originalConfig as AxiosRequestConfig)
                 }
             }
+
+            if (statusCode === 401 && url.includes('refresh')) {
+                if (!isSession()) return
+
+                autoLogout()
+                return
+            }
+
             return {
                 data: {
                     data: null,
@@ -75,4 +79,40 @@ axiosInstance.interceptors.response.use(
             }
         }
     },
+);
+
+// AXIOS INSTANCE FOR SERVER
+export const axiosServer = axios.create({
+    baseURL: API_URL,
+    timeout: 5 * 60 * 1000, //optional
+    httpsAgent: new https.Agent({
+        maxSockets: 160,
+        maxFreeSockets: 160,
+        timeout: 60000,
+        keepAliveMsecs: 60000,
+    }),
+    httpAgent: new http.Agent({
+        maxSockets: 160,
+        maxFreeSockets: 160,
+        timeout: 60000,
+        keepAliveMsecs: 60000,
+    })
+});
+
+axiosServer.interceptors.request.use(
+    async function (config: InternalAxiosRequestConfig) {
+        return config;
+    },
+    function (e: AxiosError) {
+        console.log(e)
+    }
+);
+
+axiosServer.interceptors.response.use(
+    function (res: AxiosResponse) {
+        return res;
+    },
+    function (e: AxiosError) {
+        console.log(e)
+    }
 );

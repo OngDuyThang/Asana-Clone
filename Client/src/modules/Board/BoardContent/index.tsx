@@ -1,9 +1,7 @@
-import { Button, Container } from 'components'
-import { type FC, useState } from 'react'
+import { Container } from 'components'
+import { type FC, useState, useEffect, useContext } from 'react'
 import styles from './index.module.less'
-import { useGetSensors } from 'hooks'
-import { capitalize } from 'lodash'
-import { RiMenuAddLine } from "react-icons/ri";
+import { useAppSelector, useGetSensors } from 'hooks'
 import { TColumn } from 'types/column'
 import {
     DndContext,
@@ -18,23 +16,60 @@ import { sortByOrder } from 'utils/helpers'
 import { TCard } from 'types/card'
 import { Card } from './Column/Content'
 import Column from './Column'
-import { dropAnimation, isCard } from 'utils/board'
+import { addEmptyCard, dropAnimation, isCard } from 'utils/board'
 import { dragEnd, dragOver, dragStart } from './event'
+import AddColumn from '../Components/AddColumn'
+import { useMutation } from 'react-query'
+import { moveColumn } from 'api/board'
+import { useRouter } from 'next/router'
+import { ToastContext, ToastInstance } from 'layout'
+import { BoardContext, RefetchBoard } from '..'
+import { capitalize } from 'lodash'
+import { moveCard } from 'api/column'
 
 interface BoardContentProps {
-    columnList: TColumn[];
-    columnOrder: string[]
+    columnList: TColumn[]
 }
 
 const BoardContent: FC<BoardContentProps> = ({
-    columnList: columns,
-    columnOrder: order
+    columnList: columns
 }) => {
-    // COLUMN LIST & COLUMN ORDER FOR POST REQUEST
+    const router = useRouter()
+    const toast = useContext(ToastContext) as ToastInstance
+    const refetchBoard = useContext(BoardContext) as RefetchBoard
+    const { isSession } = useAppSelector(state => state.user)
     const [columnList, setColumnList] = useState<TColumn[]>([...columns])
-    const [columnOrder, setColumnOrder] = useState<string[]>([...order])
     const sensors = useGetSensors()
     const [activeItem, setActiveItem] = useState<TColumn | TCard | null>(null)
+    const { mutate: handleMoveColumn } = useMutation(moveColumn, {
+        onSuccess: (data) => {
+            if (data.statusCode !== 200) {
+                toast.error({ message: data.message })
+                return
+            }
+            toast.success({ message: capitalize('move column successfully') })
+            refetchBoard()
+        },
+        retry: false,
+    })
+    const { mutate: handleMoveCard } = useMutation(moveCard, {
+        onSuccess: (data) => {
+            if (data.statusCode !== 200) {
+                toast.error({ message: data.message })
+                return
+            }
+            toast.success({ message: capitalize('move card successfully') })
+            refetchBoard()
+        },
+        retry: false,
+    })
+
+    useEffect(() => {
+        setColumnList(() => {
+            addEmptyCard(columns)
+            return [...columns]
+        })
+    }, [columns])
 
     const render = columnList.map(column => {
         column.cards = sortByOrder(
@@ -47,22 +82,12 @@ const BoardContent: FC<BoardContentProps> = ({
         )
     })
 
-    const AddColumn = (
-        <Button
-            icon={<RiMenuAddLine className='w-4 h-4' />}
-            fontWeight='600'
-            onClick={() => { }}
-        >
-            {capitalize('add new columns')}
-        </Button>
-    )
-
     const handleDragStart = (event: DragStartEvent) => {
-        dragStart(event, (value: TColumn | TCard | null) => {
-            setActiveItem(value)
-        })
+        dragStart(
+            event,
+            (value: TColumn | TCard | null) => { setActiveItem(value) }
+        )
     }
-
 
     const handleDragOver = (event: DragOverEvent) => {
         dragOver(
@@ -80,7 +105,16 @@ const BoardContent: FC<BoardContentProps> = ({
             (value: TColumn | TCard | null) => { setActiveItem(value) },
             columnList,
             (value: TColumn[]) => { setColumnList(value) },
-            (value: string[]) => { setColumnOrder(value) }
+            handleMoveColumn,
+            handleMoveCard
+            // (value: string[]) => {
+            //     if (isSession) {
+            //         mutate({
+            //             id: router.query?.slug as string,
+            //             columnOrderIds: value
+            //         })
+            //     }
+            // }
         )
     }
 
@@ -108,7 +142,7 @@ const BoardContent: FC<BoardContentProps> = ({
                     className={styles.root}
                 >
                     {render}
-                    {AddColumn}
+                    <AddColumn />
                 </Container>
             </SortableContext>
         </DndContext>
