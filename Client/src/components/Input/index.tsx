@@ -1,4 +1,4 @@
-import { type FC, forwardRef } from 'react'
+import { forwardRef } from 'react'
 import {
     Input as AntdInput,
     InputProps as AntdInputProps,
@@ -17,7 +17,7 @@ export const {
     Password: AntdPassword
 } = AntdInput
 
-interface InputProps extends
+export interface InputProps extends
     Pick<Required<AntdInputProps>, TInputProps>,
     Omit<AntdInputProps, TInputProps | TInputPropsExcept> {
     isHeaderInput?: boolean
@@ -60,25 +60,3 @@ const Input = forwardRef<AntdInputRef, InputProps>(({
 })
 
 export default Input
-
-interface PasswordProps extends InputProps {
-    visibilityToggle?: boolean
-}
-
-export const Password: FC<PasswordProps> = ({
-    visibilityToggle = true,
-    className,
-    ...props
-}) => {
-    const theme = useValueByTheme(lightTheme, darkTheme)
-
-    return (
-        <AntdConfigProvider theme={theme}>
-            <AntdPassword
-                visibilityToggle={visibilityToggle}
-                className={clsx(styles.root, className)}
-                {...props}
-            />
-        </AntdConfigProvider>
-    )
-}

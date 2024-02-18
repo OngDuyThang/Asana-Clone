@@ -33,10 +33,16 @@ export const moveCardBetweenColumns = (
 
     // CHECK IF CARD EXIST IN THE CARD LIST OF THE CURRENT COLUMN
     // INSERT CARD TO THE CARD LIST OF THE CURRENT COLUMN, UPDATE COLUMN ID FOR CARD
-    if (currentColumn.cards.find(card => card.id === activeCard.id)) return
+    const duplicateCard = currentColumn.cards.find(card => card.id === activeCard.id)
+    if (duplicateCard) {
+        remove(currentColumn.cards, card => card.id === duplicateCard.id)
+        remove(currentColumn.cardOrderIds, id => id === duplicateCard.id)
+    }
     activeCard.columnId = currentColumn.id
-    currentColumn.cards.splice(insertIndex, 0, activeCard)
-    currentColumn.cardOrderIds.splice(insertIndex, 0, activeCard.id)
+
+    const length = currentColumn.cards.length
+    currentColumn.cards.splice(insertIndex >= length ? length : insertIndex, 0, activeCard)
+    currentColumn.cardOrderIds.splice(insertIndex >= length ? length : insertIndex, 0, activeCard.id)
 
     // REMOVE CARD FROM THE CARD LIST OF THE PREVIOUS COLUMN
     remove(prevColumn.cards, card => card.id === activeCard.id)

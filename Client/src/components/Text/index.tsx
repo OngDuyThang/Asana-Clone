@@ -16,7 +16,8 @@ interface TextProps {
     fontStyle?: string;
     opacity?: string;
     children: ReactNode;
-    style?: CSSProperties
+    style?: CSSProperties;
+    onClick?: () => void
 }
 
 const Text: FC<TextProps> = ({
@@ -32,7 +33,8 @@ const Text: FC<TextProps> = ({
     children,
     opacity,
     className,
-    style
+    style,
+    onClick
 }) => {
     const customStyle: string | number | {} = {
         color: color,
@@ -54,6 +56,7 @@ const Text: FC<TextProps> = ({
                 styles.span,
                 className
             )}
+            onClick={onClick}
         >
             {children}
         </span>
@@ -66,6 +69,7 @@ const Text: FC<TextProps> = ({
                 styles.p,
                 className
             )}
+            onClick={onClick}
         >
             {children}
         </p>
@@ -79,6 +83,7 @@ const Text: FC<TextProps> = ({
                 className
             )}
             style={customStyle}
+            onClick={onClick}
         >
             {children}
         </div>

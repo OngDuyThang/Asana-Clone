@@ -24,3 +24,16 @@ export type MoveColumnRequest = {
     id: string,
     columnOrderIds: string[]
 }
+
+export type TBoardTitle = {
+    id: string,
+    title: string
+}
+
+export type CreateBoardRequest = {
+    title: string,
+    description?: string,
+    type: TBoardAccess,
+    owners: [],
+    members: [],
+}

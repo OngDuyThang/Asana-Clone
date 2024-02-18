@@ -1,14 +1,12 @@
 import { type FC } from "react"
 import styles from './index.module.less'
-import { ThemeSelect, Workspace, Recent, Starred, Templates, User } from "layout/Components"
-import { Image, Div, Button, Search, Container } from "components"
+import { ThemeSelect, Workspace, Recent, Starred, Templates, User, AddBoard, Signin } from "layout/Components"
+import { Image, Div, Search, Container } from "components"
 import clsx from "clsx"
 import { AntdHeader } from "layout"
-import { capitalize } from "lodash"
 import { useAppSelector, useValueByTheme } from "hooks"
 import { DarkColor, LightColor } from "types/theme"
-import { MdAddToPhotos } from "react-icons/md";
-import Signin from "layout/Components/Signin"
+import { useRouter } from "next/router"
 
 interface HeaderProps {
     className?: string
@@ -20,11 +18,15 @@ const Header: FC<HeaderProps> = ({
     const bgColor = useValueByTheme(LightColor.background, DarkColor.background)
     const logoSrc = useValueByTheme('/light-logo.png', '/dark-logo.png')
     const { isSession } = useAppSelector(state => state.user)
+    const router = useRouter()
 
     const Left = (
         <Container width="50" height="100" flex align="center" gap='16'
             className={styles.left}>
-            <Div className={styles.logo}>
+            <Div
+                className={styles.logo}
+                onClick={() => router.push({ pathname: '/dashboard' })}
+            >
                 <Image
                     src={logoSrc}
                     alt='logo'
@@ -36,15 +38,8 @@ const Header: FC<HeaderProps> = ({
                 <Recent />
                 <Starred />
                 <Templates />
-                <Button fontSize='12px' fontWeight='600'
-                    onClick={() => {}}
-                    icon={<MdAddToPhotos />}
-                    className={styles.create}
-                    isHeaderButton
-                >
-                    {capitalize('create')}
-                </Button>
             </Container>
+            <AddBoard />
         </Container>
     )
 
@@ -55,7 +50,6 @@ const Header: FC<HeaderProps> = ({
             <ThemeSelect className={styles.themeSelect} />
             <Search
                 placeholder="Search"
-                onChange={() => {}}
                 onSearch={() => {}}
                 className={styles.search}
                 isHeaderInput

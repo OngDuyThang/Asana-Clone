@@ -17,8 +17,11 @@ export class AuthService {
         private env: Env
     ) {}
 
-    async signUp(credential: CredentialSignupDTO): Promise<void> {
-        return this.usersRepository.createUser(credential)
+    async signUp(
+        credential: CredentialSignupDTO,
+        avatar: Express.Multer.File
+    ): Promise<void> {
+        return this.usersRepository.createUser(credential, avatar)
     }
 
     async signIn(
@@ -31,13 +34,16 @@ export class AuthService {
                 where: {
                     username
                 },
-                select: ['password']
+                select: ['id', 'username', 'password', 'avatar', 'email']
             })
             if (!user) throw new NotFoundException('Please check your credential')
             const isMatch = await bcrypt.compare(password, user.password)
             if (!isMatch) throw new NotFoundException('Please check your credential')
 
-            const payload: JwtPayload = { username: user.username }
+            const payload: JwtPayload = {
+                id: user.id,
+                username: user.username
+            }
             const refreshToken = this.jwtService.sign(payload, {
                 secret: this.env.JWT_SECRET_REFRESH,
                 expiresIn: '1d'
@@ -54,7 +60,7 @@ export class AuthService {
             );
             return {
                 username: user.username,
-                avatar: '',
+                avatar: user.avatar,
                 email: user.email,
                 accessToken: this.jwtService.sign(payload),
             }
@@ -69,7 +75,7 @@ export class AuthService {
         const refreshToken = req.cookies?.jwt
         if (refreshToken) {
             try {
-                const { username, exp } = this.jwtService.verify(
+                const { id, username, exp } = this.jwtService.verify(
                     refreshToken, { secret: this.env.JWT_SECRET_REFRESH }
                 )
                 if (Date.now() >= (exp * 1000)) {
@@ -77,6 +83,7 @@ export class AuthService {
                 }
 
                 const payload: JwtPayload = {
+                    id,
                     username
                 }
                 return this.jwtService.sign(payload)

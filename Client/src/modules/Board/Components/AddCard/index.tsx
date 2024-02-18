@@ -11,6 +11,7 @@ import { ToastContext, ToastInstance } from 'layout';
 import { BoardContext, RefetchBoard } from 'modules/Board';
 import { MdAddBox } from "react-icons/md";
 import { createCard } from 'api/card';
+import ImageUpload from 'components/ImageUpload';
 
 interface IProps {
     columnId: string
@@ -63,26 +64,10 @@ const AddCard: FC<IProps> = ({
     const Ready = (
         <Container flex gap={16} direct='column' className='py-2'>
             <Input
-                onChange={() => {}}
                 placeholder={capitalize('card title')}
                 ref={inputRef}
             />
-            <Upload
-                name='cover'
-                listType="picture"
-                maxCount={1}
-                multiple={false}
-                onChange={(info) => setCover(info.file.originFileObj)}
-            >
-                <Button
-                    fontSize='12px'
-                    fontWeight={600}
-                    onClick={() => {}}
-                    icon={<AiOutlineUpload />}
-                >
-                    {capitalize('image')}
-                </Button>
-            </Upload>
+            <ImageUpload setImg={(img: File) => setCover(img)} />
             <Container flex justify='between' align='center'>
                 <Button
                     fontSize='12px'

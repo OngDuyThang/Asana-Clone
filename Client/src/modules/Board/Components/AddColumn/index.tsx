@@ -58,7 +58,6 @@ const AddColumn: FC = () => {
             style={{ boxShadow: 'var(--board-shadow)' }}
         >
             <Input
-                onChange={() => {}}
                 placeholder={capitalize('column title')}
                 ref={inputRef}
             />

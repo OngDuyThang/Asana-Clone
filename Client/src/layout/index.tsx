@@ -14,6 +14,7 @@ import styles from './index.module.less'
 import { setAccessToken } from 'store/user/slice';
 import { getAccessToken } from 'utils/helpers';
 import { LoadingScreen } from 'components';
+import { useRouter } from 'next/router';
 const Header = lazy(() => import('./Header'))
 const Content = lazy(() => import('./Content'))
 
@@ -32,6 +33,7 @@ interface LayoutProps {
 const Layout: FC<LayoutProps> = ({
     children
 }) => {
+    const router = useRouter()
     const dispatch = useAppDispatch()
     const { theme: reduxTheme } = useAppSelector(state => state.system)
     const [theme, setTheme] = useState<ThemeConfig>()
@@ -79,9 +81,12 @@ const Layout: FC<LayoutProps> = ({
         }
     }, [])
 
+    if (router.pathname === '/404') return <>{children}</>
+
     return (
         <AntdConfigProvider theme={theme}>
             {contextHolder}
+            <LoadingScreen isRouteLoading />
             <AntdLayout className={styles.root}>
                 <ToastContext.Provider value={api}>
                     <Suspense fallback={<LoadingScreen />}>

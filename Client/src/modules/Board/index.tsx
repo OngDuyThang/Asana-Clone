@@ -22,7 +22,9 @@ const Board: FC<BoardProps> = ({
     const router = useRouter()
     const [boardData, setBoardData] = useState<TBoard>(mockBoardData)
     const { isSession } = useAppSelector(state => state.user)
-    const { isLoading, refetch: refetchBoard, isFetching } = useGetBoardById('78ad2d84-ec29-4476-9195-77829cd67b7f', router.pathname, {
+    const { isLoading, refetch: refetchBoard, isFetching } = useGetBoardById(
+        router.query?.slug as string,
+        router.pathname, {
         onSuccess: (data) => {
             if (!data?.data) return
             setBoardData(data.data)

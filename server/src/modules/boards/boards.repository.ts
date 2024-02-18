@@ -1,12 +1,12 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { ArrayContains, DataSource, Repository } from "typeorm";
 import { BoardEntity } from "./board.entity";
 import { CreateBoardDto } from "./dto/create-board.dto";
 import { kebabCase } from 'lodash'
 import { UserEntity } from "../auth/user.entity";
-import { excludeColumns } from "src/utils/db";
 import { throwException } from "src/utils/exceptions";
 import { MoveColumnDto } from "./dto/move-column.dto";
+import { GetBoardsResDto } from "./dto/get-boards-res.dto";
 
 @Injectable()
 export class BoardsRepository extends Repository<BoardEntity>{
@@ -16,13 +16,14 @@ export class BoardsRepository extends Repository<BoardEntity>{
 
     async getBoards(
         user: UserEntity
-    ): Promise<BoardEntity[]> {
+    ): Promise<GetBoardsResDto[]> {
         try {
             const boards = await this.find({
                 where: [
                     { ownerIds: ArrayContains([user.id]) },
                     { memberIds: ArrayContains([user.id]) }
-                ]
+                ],
+                select: ['id', 'title']
             })
             return boards
         } catch (e) {

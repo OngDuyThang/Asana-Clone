@@ -1,7 +1,7 @@
 import { Button } from 'components'
 import { useAppSelector } from 'hooks'
 import { capitalize } from 'lodash'
-import SigninForm from 'modules/Auth/SigninForm'
+import Auth from 'modules/Auth'
 import { useState, type FC, useEffect } from 'react'
 
 const Signin: FC = () => {
@@ -14,7 +14,7 @@ const Signin: FC = () => {
 
     return (
         <>
-            <SigninForm
+            <Auth
                 open={isOpen}
                 handleCancel={() => { setIsOpen(false) }}
             />

@@ -6,7 +6,7 @@ import { MoveColumnRequest } from "types/board"
 import { TCard } from "types/card"
 import { MoveCardRequest, TColumn } from "types/column"
 import { addEmptyCard, isCard, moveCardBetweenColumns, moveCardSameColumn, removeEmptyCard, validateEmptyCard } from "utils/board"
-import { moveItem } from "utils/helpers"
+import { isSession, moveItem } from "utils/helpers"
 
 let prevColumnId: string = ''
 
@@ -40,18 +40,10 @@ export const dragOver = (
     const prevColumn = columnList.find(column => column.id === activeCard.columnId)
     const currentColumn = columnList.find(
         column => column.cards.find(
-            card => card.id === over.id // || card.columnId === over.id
+            card => card.id === over.id
         )
     )
-    if (!currentColumn || !prevColumn) return
-
-    if (currentColumn.id === prevColumn.id) {
-        moveCardSameColumn(
-            activeCard,
-            currentColumn,
-            over
-        )
-    }
+    if (!currentColumn || !prevColumn || currentColumn.id === prevColumn.id) return
 
     if (currentColumn.id !== prevColumn.id) {
         prevColumnId = prevColumn.id
@@ -62,12 +54,12 @@ export const dragOver = (
             active,
             over
         )
+
+        // PREVENT EMPTY CARD LIST BUG BY ADD EMPTY CARD
+        addEmptyCard(columnList)
     }
 
     setActiveItem(cloneDeep(activeCard))
-
-    // PREVENT EMPTY CARD LIST BUG BY ADD EMPTY CARD
-    addEmptyCard(columnList)
 }
 
 export const dragEnd = (
@@ -104,13 +96,15 @@ export const dragEnd = (
                 currentColumn,
                 over
             )
-            handleMoveCard({
-                currentId: currentColumn.id,
-                prevId: currentColumn.id,
-                cardId: activeCard.id,
-                currentCardOrderIds: validateEmptyCard([...currentColumn.cardOrderIds]),
-                prevCardOrderIds: validateEmptyCard([...currentColumn.cardOrderIds])
-            })
+            if (isSession()) {
+                handleMoveCard({
+                    currentId: currentColumn.id,
+                    prevId: currentColumn.id,
+                    cardId: activeCard.id,
+                    currentCardOrderIds: validateEmptyCard([...currentColumn.cardOrderIds]),
+                    prevCardOrderIds: validateEmptyCard([...currentColumn.cardOrderIds])
+                })
+            }
         } else {
             moveCardBetweenColumns(
                 activeCard,
@@ -119,16 +113,22 @@ export const dragEnd = (
                 active,
                 over
             )
-            handleMoveCard({
-                currentId: currentColumn.id,
-                prevId: prevColumn.id,
-                cardId: activeCard.id,
-                currentCardOrderIds: validateEmptyCard([...currentColumn.cardOrderIds]),
-                prevCardOrderIds: validateEmptyCard([...prevColumn.cardOrderIds])
-            })
+            if (isSession()) {
+                handleMoveCard({
+                    currentId: currentColumn.id,
+                    prevId: prevColumn.id,
+                    cardId: activeCard.id,
+                    currentCardOrderIds: validateEmptyCard([...currentColumn.cardOrderIds]),
+                    prevCardOrderIds: validateEmptyCard([...prevColumn.cardOrderIds])
+                })
+            }
         }
 
         prevColumnId = ''
+        // PREVENT EMPTY CARD LIST BUG BY ADD EMPTY CARD
+        addEmptyCard(columnList)
+        // DELETE EMPTY CARD WHEN ADD CARD
+        removeEmptyCard(columnList)
     }
 
     if (!isCard(activeItem)) {
@@ -138,17 +138,14 @@ export const dragEnd = (
 
             const newColumnList: TColumn[] = [...moveItem(columnList, oldIndex, newIndex)]
             setColumnList(newColumnList)
-            handleMoveColumn({
-                id: newColumnList[0].boardId,
-                columnOrderIds: [...newColumnList.map(column => column.id)]
-            })
+            if (isSession()) {
+                handleMoveColumn({
+                    id: newColumnList[0].boardId,
+                    columnOrderIds: [...newColumnList.map(column => column.id)]
+                })
+            }
         }
     }
 
     setActiveItem(null)
-
-    // PREVENT EMPTY CARD LIST BUG BY ADD EMPTY CARD
-    addEmptyCard(columnList)
-    // DELETE EMPTY CARD WHEN ADD CARD
-    removeEmptyCard(columnList)
 }

@@ -4,6 +4,7 @@ import { FaCut, FaCopy, FaPaste, FaCloud } from "react-icons/fa";
 import { CSSProperties } from "react";
 import { UseMutateFunction } from "react-query";
 import { TApiResponse } from "types/api";
+import { isSession } from "utils/helpers";
 
 const iconCss: string = 'w-4 h-4'
 const itemCss: CSSProperties = {
@@ -12,11 +13,9 @@ const itemCss: CSSProperties = {
     alignItems: 'center'
 }
 
-type DeleteApi = UseMutateFunction<TApiResponse, unknown, string, unknown>
-
 export const items = (
     columnId: string,
-    deleteColumn: DeleteApi,
+    deleteColumn: UseMutateFunction<TApiResponse, unknown, string, unknown>,
 ): TDropdownItems => [
         {
             label: 'Add new',
@@ -58,7 +57,9 @@ export const items = (
             style: {
                 gap: '4px'
             },
-            onClick: () => deleteColumn(columnId)
+            onClick: () => {
+                if (isSession()) deleteColumn(columnId)
+            }
         },
         {
             label: 'Archive this column',

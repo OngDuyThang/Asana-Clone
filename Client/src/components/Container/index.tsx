@@ -17,6 +17,7 @@ interface ContainerProps extends ComponentPropsWithRef<'div'> {
     justify?: layout | justify;
     align?: layout;
     gap?: string | number;
+    rowGap?: string | number;
     wrap?: boolean;
     className?: string;
     color?: string;
@@ -34,6 +35,7 @@ const Container = forwardRef<HTMLDivElement, ContainerProps>(({
     justify,
     align,
     gap,
+    rowGap,
     wrap = false,
     className,
     color,
@@ -56,6 +58,7 @@ const Container = forwardRef<HTMLDivElement, ContainerProps>(({
             )}
             style={{
                 gap: `${gap}px`,
+                rowGap: `${rowGap}px`,
                 color,
                 background,
                 ...style

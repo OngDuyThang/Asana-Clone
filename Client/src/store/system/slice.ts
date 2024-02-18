@@ -7,7 +7,7 @@ export type TSystemState = {
 }
 
 const initialState: TSystemState = {
-    theme: ThemeEnum.light,
+    theme: ThemeEnum.dark,
     systemTheme: false
 }
 

@@ -9,13 +9,15 @@ import { UsersRepository } from './user.repository';
 import { JwtStrategy } from './jwt.strategy';
 import { EnvModule } from 'src/config/env/env.module';
 import { jwtConfig } from 'src/config/jwt.config';
+import { UploadModule } from '../upload/upload.module';
 
 @Module({
   imports: [
     EnvModule,
     TypeOrmModule.forFeature([UserEntity]),
     JwtModule.registerAsync(jwtConfig),
-    PassportModule.register({ defaultStrategy: 'jwt' })
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    UploadModule
   ],
   controllers: [AuthController],
   providers: [AuthService, UsersRepository, JwtStrategy],

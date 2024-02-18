@@ -31,10 +31,6 @@ export class CredentialSignupDTO {
     @IsNotEmpty()
     email: string;
 
-    @IsString()
-    @IsOptional()
-    avatar?: string;
-
     @IsEnum(Role)
     @IsOptional()
     role?: Role

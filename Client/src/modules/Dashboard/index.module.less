@@ -1,0 +1,44 @@
+.root {
+    height: calc(100vh - var(--header-height) - 8px);
+    padding: 16px;
+}
+
+.list {
+    width: calc(100% + 16px);
+    margin-left: -8px;
+
+    .item {
+        width: 12.5%;
+        @media (max-width: 1200px) {
+            width: 16.66%;
+        }
+        @media (max-width: 992px) {
+            width: 33.33%;
+        }
+        @media (max-width: 768px) {
+            width: 50%;
+        }
+        @media (max-width: 480px) {
+            width: 100%;
+        }
+
+        .content {
+            width: calc(100% - 16px);
+            height: 88px;
+            padding: 12px 10px;
+            margin: auto;
+            border-radius: 2px;
+            cursor: pointer;
+            box-shadow: var(--board-shadow);
+            @media (max-width: 992px) {
+                height: 104px;
+            }
+            @media (max-width: 768px) {
+                height: 120px;
+            }
+            @media (max-width: 480px) {
+                height: 136px;
+            }
+        }
+    }
+}

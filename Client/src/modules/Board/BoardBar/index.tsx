@@ -6,13 +6,9 @@ import { IoMdPersonAdd } from "react-icons/io";
 import { MdDashboard, MdPublic, MdPublicOff } from "react-icons/md";
 import { Avatar } from "antd";
 import { capitalize } from "lodash";
-import { useAppSelector, useValueByTheme } from "hooks";
+import { useValueByTheme } from "hooks";
 import { DarkColor, LightColor } from "types/theme";
 import { TBoardAccess } from "types/board";
-import { axiosClient } from "api/axios";
-import { useGetBoardById } from "api/board";
-import { useRouter } from "next/router";
-import { getAccessToken, replaceAccessToken } from "utils/helpers";
 
 interface BoardBarProps {
     title: string;
@@ -25,28 +21,16 @@ const BoardBar: FC<BoardBarProps> = ({
     description,
     type,
 }) => {
-    const router = useRouter()
     const bgColor = useValueByTheme(LightColor.boardbar, DarkColor.boardbar)
     const iconCss: string = 'w-4 h-4'
     const accessIcon = type === 'public'
         ? <MdPublic className={iconCss} />
         : <MdPublicOff className={iconCss} />
 
-    const testClick = async () => {
-        // const { data } = await axiosClient.post('/auth/refresh')
-        // console.log(data)
-
-        // const { data } = await axiosClient.post('/auth/testabc')
-        // console.log(data)
-    }
-
-    // const { data } = useGetBoardById(router.pathname)
-
     const Left = (
         <Container width="50" height="100" flex align="center" gap='16'>
             <Button
                 type="text"
-                onClick={() => {}}
                 icon={<MdDashboard className={iconCss} />}
                 fontWeight='600'
                 isBoardbarButton
@@ -55,7 +39,6 @@ const BoardBar: FC<BoardBarProps> = ({
             </Button>
             <Button
                 type="text"
-                onClick={() => {}}
                 icon={accessIcon}
                 fontWeight='600'
                 isBoardbarButton
@@ -64,7 +47,6 @@ const BoardBar: FC<BoardBarProps> = ({
             </Button>
             <Button
                 type="text"
-                onClick={() => {}}
                 icon={<IoFilter className={iconCss} />}
                 fontWeight='600'
                 isBoardbarButton
@@ -85,7 +67,6 @@ const BoardBar: FC<BoardBarProps> = ({
                 <Avatar style={{ backgroundColor: '#1677ff' }} icon={<>A</>} />
             </Avatar.Group>
             <Button
-                onClick={testClick}
                 icon={<IoMdPersonAdd className={iconCss} />}
                 fontWeight='600'
                 isBoardbarButton

@@ -1,9 +1,12 @@
 export type TCredentialSignin = {
-    username: string;
-    password: string;
+    username: string,
+    password: string,
 }
 
-export type TCredentialSignup = {}
+export type TCredentialSignup = TCredentialSignin & {
+    email: string,
+    avatar?: File
+}
 
 export type SigninResponseDto = {
     username: string,

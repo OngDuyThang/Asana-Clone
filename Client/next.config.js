@@ -1,18 +1,34 @@
 /** @type {import('next').NextConfig} */
-const withLess = require("next-with-less");
+const withPlugins = require('next-compose-plugins');
+const less = require("next-with-less");
 
-const nextConfig = withLess({
-    lessLoaderOptions: {
-        /* ... */
-    },
-    images: {
-        remotePatterns: [
+const nextConfig = {}
+
+const redirects = {
+    async redirects() {
+        return [
             {
-                protocol: "https",
-                hostname: "**",
+                source: '/',
+                destination: '/dashboard',
+                permanent: true,
             },
-        ],
+        ];
     },
-});
+};
 
-module.exports = nextConfig
+module.exports = withPlugins([
+    [less, {
+        lessLoaderOptions: {
+            /* ... */
+        },
+        images: {
+            remotePatterns: [
+                {
+                    protocol: "https",
+                    hostname: "**",
+                },
+            ],
+        },
+    }],
+    [redirects]
+], nextConfig);

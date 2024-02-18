@@ -4,6 +4,7 @@ import { CreateBoardDto } from './dto/create-board.dto';
 import { BoardEntity } from './board.entity';
 import { UserEntity } from '../auth/user.entity';
 import { MoveColumnDto } from './dto/move-column.dto';
+import { GetBoardsResDto } from './dto/get-boards-res.dto';
 
 @Injectable()
 export class BoardsService {
@@ -13,7 +14,7 @@ export class BoardsService {
 
     async getBoards(
         user: UserEntity
-    ): Promise<BoardEntity[]> {
+    ): Promise<GetBoardsResDto[]> {
         return this.boardsRepository.getBoards(user)
     }
 

@@ -4,21 +4,21 @@ import { TDropdownItems, TDropdownOnClick } from 'types/dropdown';
 
 const items: TDropdownItems = [
     {
-        label: '1st menu item',
+        label: 'Coming soon',
         key: '1',
         style: {
             fontWeight: '600'
         }
     },
     {
-        label: '2st menu item',
+        label: 'Coming soon',
         key: '2',
         style: {
             fontWeight: '600'
         }
     },
     {
-        label: '3rd menu item',
+        label: 'Coming soon',
         key: '3',
         style: {
             fontWeight: '600'

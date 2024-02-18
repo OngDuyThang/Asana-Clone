@@ -7,6 +7,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/utils/decorators';
 import { UserEntity } from '../auth/user.entity';
 import { MoveColumnDto } from './dto/move-column.dto';
+import { GetBoardsResDto } from './dto/get-boards-res.dto';
 
 @Controller('boards')
 @UseGuards(AuthGuard())
@@ -18,7 +19,7 @@ export class BoardsController {
     @Get()
     async getBoards(
         @GetUser() user: UserEntity
-    ): Promise<BoardEntity[]> {
+    ): Promise<GetBoardsResDto[]> {
         return this.boardService.getBoards(user)
     }
 

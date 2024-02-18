@@ -1,9 +1,8 @@
 import { type FC, useContext } from 'react'
-import { Checkbox, Form } from 'antd'
-import { Button, Input, Modal, Text } from 'components'
-import styles from './index.module.less'
+import { Checkbox } from 'antd'
+import { Button, Input, Text, Form, Password, Container } from 'components'
+import styles from '../index.module.less'
 import { FaUser, FaLock } from "react-icons/fa";
-import { Password } from 'components/Input';
 import { TCredentialSignin } from 'types/auth';
 import { useMutation } from 'react-query';
 import { signin } from 'api/auth';
@@ -11,21 +10,18 @@ import { useAppDispatch } from 'hooks';
 import { signinAction } from 'store/user/slice';
 import { capitalize } from 'lodash';
 import { ToastContext, ToastInstance } from "layout";
-
-const { Item } = Form
+import { Item, useForm } from 'components/Form';
 
 interface IProps {
-    open: boolean;
-    handleCancel: () => void
+    setIsSignin: () => void
 }
 
 const SigninForm: FC<IProps> = ({
-    open,
-    handleCancel
+    setIsSignin
 }) => {
     const dispatch = useAppDispatch()
     const toast = useContext(ToastContext) as ToastInstance
-    const [form] = Form.useForm();
+    const [form] = useForm();
     const { mutate: handleSignin } = useMutation(signin, {
         onSuccess: (data) => {
             if (!data?.data) {
@@ -50,61 +46,76 @@ const SigninForm: FC<IProps> = ({
         handleSignin(credential)
     }
 
-    return (
-        <Modal
-            className={styles.root}
-            title={<Text tag='span' fontSize='18px'>{capitalize('sign in')}</Text>}
-            open={open}
-            onCancel={handleCancel}
-            width={400}
+    const Username = (
+        <Item
+            name="username"
+            rules={[{ required: true, message: capitalize('please input your username!') }]}
+            validateTrigger='onBlur'
         >
-            <Form
-                form={form}
-                onFinish={handleFinish}
-                autoComplete="off"
+            <Input
+                name="username"
+                prefix={<FaUser />}
+                placeholder={capitalize('username')}
+            />
+        </Item>
+    )
+
+    const Pass = (
+        <Item
+            name="password"
+            rules={[{ required: true, message: capitalize('please input your password!') }]}
+            validateTrigger='onBlur'
+        >
+            <Password
+                name="password"
+                prefix={<FaLock />}
+                placeholder={capitalize('password')}
+            />
+        </Item>
+    )
+
+    const Remember = (
+        <Item name="remember" valuePropName="checked" noStyle>
+            <Checkbox>{capitalize('remember me')}</Checkbox>
+        </Item>
+    )
+
+    const Signup = (
+        <Container flex justify='center' className='mt-6'>
+            <Text
+                tag="span" fontSize="14px" textDecoration="underline"
+                className="cursor-pointer"
+                onClick={setIsSignin}
             >
-                <Item
-                    name="username"
-                    rules={[{ required: true, message: capitalize('please input your username!') }]}
-                    validateTrigger='onBlur'
-                >
-                    <Input
-                        name="username"
-                        prefix={<FaUser />}
-                        placeholder='Username'
-                        onChange={() => {}}
-                    />
-                </Item>
+                {capitalize('or create an account')}
+            </Text>
+        </Container>
+    )
 
-                <Item
-                    name="password"
-                    rules={[{ required: true, message: capitalize('please input your password!') }]}
-                    validateTrigger='onBlur'
-                >
-                    <Password
-                        name="password"
-                        prefix={<FaLock />}
-                        placeholder='Password'
-                        onChange={() => {}}
-                    />
-                </Item>
+    const Submit = (
+        <Item>
+            <Button
+                className={styles.submit}
+                fontWeight={600}
+                htmlType="submit"
+            >
+                {capitalize('submit')}
+            </Button>
+        </Item>
+    )
 
-                <Item name="remember" valuePropName="checked" noStyle>
-                    <Checkbox>{capitalize('remember me')}</Checkbox>
-                </Item>
-
-                <Item>
-                    <Button
-                        className={styles.submit}
-                        fontWeight={600}
-                        htmlType="submit"
-                        onClick={() => {}}
-                    >
-                        {capitalize('submit')}
-                    </Button>
-                </Item>
-            </Form>
-        </Modal>
+    return (
+        <Form
+            form={form}
+            onFinish={handleFinish}
+            autoComplete="off"
+        >
+            {Username}
+            {Pass}
+            {Remember}
+            {Signup}
+            {Submit}
+        </Form>
     )
 }
 

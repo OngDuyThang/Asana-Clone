@@ -1,7 +1,7 @@
 import { Container } from 'components'
 import { type FC, useState, useEffect, useContext } from 'react'
 import styles from './index.module.less'
-import { useAppSelector, useGetSensors } from 'hooks'
+import { useGetSensors } from 'hooks'
 import { TColumn } from 'types/column'
 import {
     DndContext,
@@ -21,7 +21,6 @@ import { dragEnd, dragOver, dragStart } from './event'
 import AddColumn from '../Components/AddColumn'
 import { useMutation } from 'react-query'
 import { moveColumn } from 'api/board'
-import { useRouter } from 'next/router'
 import { ToastContext, ToastInstance } from 'layout'
 import { BoardContext, RefetchBoard } from '..'
 import { capitalize } from 'lodash'
@@ -34,10 +33,8 @@ interface BoardContentProps {
 const BoardContent: FC<BoardContentProps> = ({
     columnList: columns
 }) => {
-    const router = useRouter()
     const toast = useContext(ToastContext) as ToastInstance
     const refetchBoard = useContext(BoardContext) as RefetchBoard
-    const { isSession } = useAppSelector(state => state.user)
     const [columnList, setColumnList] = useState<TColumn[]>([...columns])
     const sensors = useGetSensors()
     const [activeItem, setActiveItem] = useState<TColumn | TCard | null>(null)
@@ -107,14 +104,6 @@ const BoardContent: FC<BoardContentProps> = ({
             (value: TColumn[]) => { setColumnList(value) },
             handleMoveColumn,
             handleMoveCard
-            // (value: string[]) => {
-            //     if (isSession) {
-            //         mutate({
-            //             id: router.query?.slug as string,
-            //             columnOrderIds: value
-            //         })
-            //     }
-            // }
         )
     }
 

@@ -89,3 +89,15 @@ export enum ModalColor {
     dark_content_bg = DARK_BOARD_COLUMN,
     dark_title = DARK_TEXT
 }
+
+export enum FormColor {
+    light_text = LIGHT_TEXT,
+    dark_text = DARK_TEXT
+}
+
+export enum RadioColor {
+    light_primary = LIGHT_PRIMARY,
+    light_text = LIGHT_TEXT,
+    dark_primary = '#515151',
+    dark_text = DARK_TEXT,
+}
