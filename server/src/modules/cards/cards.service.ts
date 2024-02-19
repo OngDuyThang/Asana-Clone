@@ -5,17 +5,12 @@ import { CardEntity } from './card.entity';
 
 @Injectable()
 export class CardsService {
-    constructor(
-        private cardsRepository: CardsRepository,
-    ) {}
+  constructor(private cardsRepository: CardsRepository) {}
 
-    async createCard(
-        createCardDto: CreateCardDto,
-        cover: Express.Multer.File
-    ): Promise<CardEntity> {
-        return this.cardsRepository.createCard(
-            createCardDto,
-            cover
-        )
-    }
+  async createCard(
+    createCardDto: CreateCardDto,
+    cover: Express.Multer.File,
+  ): Promise<CardEntity> {
+    return this.cardsRepository.createCard(createCardDto, cover);
+  }
 }

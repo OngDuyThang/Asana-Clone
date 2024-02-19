@@ -8,6 +8,6 @@ import { AuthModule } from '../auth/auth.module';
   imports: [AuthModule],
   controllers: [BoardsController],
   providers: [BoardsService, BoardsRepository],
-  exports: [BoardsService, BoardsRepository]
+  exports: [BoardsService, BoardsRepository],
 })
 export class BoardsModule {}

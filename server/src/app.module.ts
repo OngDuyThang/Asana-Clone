@@ -14,7 +14,7 @@ import { UploadModule } from './modules/upload/upload.module';
   imports: [
     ConfigModule.forRoot({
       envFilePath: [`.env.stage.${process.env.STAGE}`],
-      validationSchema: validationConfigSchema
+      validationSchema: validationConfigSchema,
     }),
     TypeOrmModule.forRootAsync(typeormConfig),
     EnvModule,
@@ -22,7 +22,7 @@ import { UploadModule } from './modules/upload/upload.module';
     CardsModule,
     ColumnsModule,
     AuthModule,
-    UploadModule
+    UploadModule,
   ],
   controllers: [],
   providers: [],

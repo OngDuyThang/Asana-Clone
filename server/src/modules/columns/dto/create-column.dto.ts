@@ -1,15 +1,21 @@
-import { IsArray, IsNotEmpty, IsString, IsUUID, MaxLength, MinLength } from "class-validator";
-import { Trim } from "src/utils/decorators";
+import {
+  IsNotEmpty,
+  IsString,
+  IsUUID,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
+import { Trim } from 'src/utils/decorators';
 
 export class CreateColumnDto {
-    @IsString()
-    @IsNotEmpty()
-    @MinLength(1)
-    @MaxLength(250)
-    @Trim()
-    title: string;
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(1)
+  @MaxLength(250)
+  @Trim()
+  title: string;
 
-    @IsUUID()
-    @IsNotEmpty()
-    boardId: string;
+  @IsUUID()
+  @IsNotEmpty()
+  boardId: string;
 }

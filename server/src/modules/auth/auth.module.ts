@@ -17,10 +17,10 @@ import { UploadModule } from '../upload/upload.module';
     TypeOrmModule.forFeature([UserEntity]),
     JwtModule.registerAsync(jwtConfig),
     PassportModule.register({ defaultStrategy: 'jwt' }),
-    UploadModule
+    UploadModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, UsersRepository, JwtStrategy],
-  exports: [JwtStrategy, PassportModule]
+  exports: [JwtStrategy, PassportModule],
 })
 export class AuthModule {}

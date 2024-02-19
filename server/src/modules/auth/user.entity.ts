@@ -1,7 +1,22 @@
-import { IsArray, IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, IsUUID, Matches, MaxLength, MinLength } from "class-validator";
-import { Role } from "src/utils/constants";
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { BoardEntity } from "../boards/board.entity";
+import {
+    IsEmail,
+    IsEnum,
+    IsNotEmpty,
+    IsOptional,
+    IsString,
+    IsUUID,
+    Matches,
+    MaxLength,
+    MinLength,
+} from 'class-validator';
+import { Role } from 'src/utils/constants';
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
+} from 'typeorm';
 
 @Entity({ name: 'user' })
 export class UserEntity {
@@ -13,7 +28,8 @@ export class UserEntity {
     @IsString()
     @IsNotEmpty()
     @Matches(/^[A-Za-z][A-Za-z0-9_]{3,29}$/, {
-        message: 'Username must start with alphabet, at least 4 characters and maximum 30 characters'
+        message:
+            'Username must start with alphabet, at least 4 characters and maximum 30 characters',
     })
     username: string;
 
@@ -21,7 +37,8 @@ export class UserEntity {
     @MinLength(8)
     @MaxLength(32)
     @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
-        message: 'Password must contain at least 1 upper case letter, at least 1 lower case letter and at least 1 number or special character.'
+        message:
+            'Password must contain at least 1 upper case letter, at least 1 lower case letter and at least 1 number or special character.',
     })
     password?: string;
 
@@ -38,20 +55,21 @@ export class UserEntity {
     @Column({ default: Role.user, select: false })
     @IsEnum(Role)
     @IsOptional()
-    role?: Role
+    role?: Role;
 
     @CreateDateColumn({
-        type: "timestamp",
-        default: () => "CURRENT_TIMESTAMP(6)",
-        select: false
+        type: 'timestamp',
+        default: () => 'CURRENT_TIMESTAMP(6)',
+        select: false,
     })
     @IsOptional()
     public created_at?: Date;
 
     @UpdateDateColumn({
-        type: "timestamp",
-        default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)",
-        select: false
+        type: 'timestamp',
+        default: () => 'CURRENT_TIMESTAMP(6)',
+        onUpdate: 'CURRENT_TIMESTAMP(6)',
+        select: false,
     })
     @IsOptional()
     public updated_at?: Date;

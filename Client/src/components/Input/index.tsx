@@ -59,4 +59,5 @@ const Input = forwardRef<AntdInputRef, InputProps>(({
     )
 })
 
+Input.displayName = 'Input'
 export default Input

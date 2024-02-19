@@ -1,3 +1,3 @@
-import { ParseUUIDPipe } from "@nestjs/common"
+import { ParseUUIDPipe } from '@nestjs/common';
 
-export const uuidPipe = new ParseUUIDPipe({ version: '4' })
+export const uuidPipe = new ParseUUIDPipe({ version: '4' });

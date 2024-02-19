@@ -1,9 +1,9 @@
 export enum StageEnum {
-    dev = 'dev',
-    prod = 'prod'
+  dev = 'dev',
+  prod = 'prod',
 }
 
 export enum Role {
-    admin = 'admin',
-    user = 'user'
+  admin = 'admin',
+  user = 'user',
 }

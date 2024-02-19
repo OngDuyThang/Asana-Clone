@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { BoardsService } from './boards.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { BoardEntity } from './board.entity';
@@ -12,50 +21,43 @@ import { GetBoardsResDto } from './dto/get-boards-res.dto';
 @Controller('boards')
 @UseGuards(AuthGuard())
 export class BoardsController {
-    constructor(
-        private boardService: BoardsService
-    ) {}
+  constructor(private boardService: BoardsService) {}
 
-    @Get()
-    async getBoards(
-        @GetUser() user: UserEntity
-    ): Promise<GetBoardsResDto[]> {
-        return this.boardService.getBoards(user)
-    }
+  @Get()
+  async getBoards(@GetUser() user: UserEntity): Promise<GetBoardsResDto[]> {
+    return this.boardService.getBoards(user);
+  }
 
-    @Post()
-    async createBoard(
-        @Body() createBoardDto: CreateBoardDto,
-        @GetUser() user: UserEntity
-    ): Promise<BoardEntity> {
-        return this.boardService.createBoard(
-            createBoardDto,
-            user
-        )
-    }
+  @Post()
+  async createBoard(
+    @Body() createBoardDto: CreateBoardDto,
+    @GetUser() user: UserEntity,
+  ): Promise<BoardEntity> {
+    return this.boardService.createBoard(createBoardDto, user);
+  }
 
-    @Get('/:id')
-    async getBoardById(
-        @Param('id', uuidPipe) id: string,
-        @GetUser() user: UserEntity
-    ): Promise<BoardEntity> {
-        return this.boardService.getBoardById(id, user)
-    }
+  @Get('/:id')
+  async getBoardById(
+    @Param('id', uuidPipe) id: string,
+    @GetUser() user: UserEntity,
+  ): Promise<BoardEntity> {
+    return this.boardService.getBoardById(id, user);
+  }
 
-    @Delete('/:id')
-    async deleteBoardById(
-        @Param('id', uuidPipe) id: string,
-        @GetUser() user: UserEntity
-    ): Promise<void> {
-        return this.boardService.deleteBoardById(id, user)
-    }
+  @Delete('/:id')
+  async deleteBoardById(
+    @Param('id', uuidPipe) id: string,
+    @GetUser() user: UserEntity,
+  ): Promise<void> {
+    return this.boardService.deleteBoardById(id, user);
+  }
 
-    @Patch('/:id')
-    async moveColumn(
-        @Param('id', uuidPipe) id: string,
-        @GetUser() user: UserEntity,
-        @Body() moveColumnDto: MoveColumnDto
-    ): Promise<void> {
-        return this.boardService.moveColumn(id, user, moveColumnDto)
-    }
+  @Patch('/:id')
+  async moveColumn(
+    @Param('id', uuidPipe) id: string,
+    @GetUser() user: UserEntity,
+    @Body() moveColumnDto: MoveColumnDto,
+  ): Promise<void> {
+    return this.boardService.moveColumn(id, user, moveColumnDto);
+  }
 }

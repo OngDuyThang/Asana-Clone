@@ -7,6 +7,6 @@ import { EnvModule } from 'src/config/env/env.module';
   imports: [EnvModule],
   controllers: [UploadController],
   providers: [UploadService],
-  exports: [UploadService]
+  exports: [UploadService],
 })
 export class UploadModule {}
