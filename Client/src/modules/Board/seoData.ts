@@ -6,7 +6,7 @@ export const mockBoardData: TBoard = {
     description: 'Pro MERN stack Course',
     type: 'public', // 'private'
     // RELATIVE
-    columnOrderIds: ['column-id-01', 'column-id-03', 'column-id-02'], // Thứ tự sắp xếp / vị trí của các Columns trong 1 boards
+    columnOrderIds: ['column-id-01', 'column-id-03', 'column-id-02'],
     // CONSTANT
     columns: [
         {

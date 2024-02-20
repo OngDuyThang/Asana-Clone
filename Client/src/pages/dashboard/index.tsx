@@ -1,7 +1,7 @@
 import Dashboard from 'modules/Dashboard'
 import { GetStaticPropsContext } from 'next'
 import { type FC } from 'react'
-import { mockBoardList } from './seoData'
+import { mockBoardList } from '../../modules/Dashboard/seoData'
 import { TBoardTitle } from 'types/board'
 
 interface IProps {

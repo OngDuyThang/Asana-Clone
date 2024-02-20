@@ -4,7 +4,7 @@ import { GetStaticPropsContext } from 'next'
 import { useRouter } from 'next/router'
 import { type FC } from 'react'
 import { TBoard } from 'types/board'
-import { mockBoardData } from './seoData'
+import { mockBoardData } from '../../modules/Board/seoData'
 
 interface IProps {
     boardData: TBoard
