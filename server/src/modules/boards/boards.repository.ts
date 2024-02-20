@@ -26,6 +26,9 @@ export class BoardsRepository extends Repository<BoardEntity> {
           { memberIds: ArrayContains([user.id]) },
         ],
         select: ['id', 'title'],
+        order: {
+          created_at: 'ASC'
+        }
       });
       return boards;
     } catch (e) {
