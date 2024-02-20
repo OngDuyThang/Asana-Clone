@@ -2,6 +2,7 @@
     overflow-y: auto;
     overflow-x: hidden;
     width: calc(100% + 8px);
+    padding: 2px;
 
     &::-webkit-scrollbar {
         width: 4px;
@@ -14,6 +15,18 @@
 
 .card {
     width: calc(100% - 8px);
+}
+
+.card-light {
+    &:hover {
+        outline: 2px solid var(--light-text);
+    }
+}
+
+.card-dark {
+    &:hover {
+        outline: 2px solid var(--dark-text);
+    }
 }
 
 .cover {

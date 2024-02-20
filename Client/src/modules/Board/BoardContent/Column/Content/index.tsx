@@ -6,8 +6,11 @@ import { EMPTY_CARD, TCard } from 'types/card'
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities';
 import { cloneDeep } from 'lodash'
+import clsx from 'clsx'
+import { useAppSelector } from 'hooks'
 
 export const Card = ({ cardData }: { cardData: TCard }) => {
+    const { theme: reduxTheme } = useAppSelector(state => state.system)
     const {
         attributes,
         listeners,
@@ -43,7 +46,7 @@ export const Card = ({ cardData }: { cardData: TCard }) => {
 
     return (
         <CardComponent
-            className={styles.card}
+            className={clsx(styles.card, styles[`card-${reduxTheme}`])}
             cover={cover(cardData.cover)}
             actions={actions({
                 memberIds: cardData.memberIds,
