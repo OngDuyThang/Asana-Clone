@@ -1,4 +1,4 @@
-import { Button, Input, Modal, Text, Form, Radio, TextArea } from 'components';
+import { Button, Input, Modal, Text, Form, Radio, TextArea, Spin } from 'components';
 import { ToastContext, ToastInstance } from 'layout';
 import { useContext, type FC, useState } from 'react'
 import styles from './index.module.less'
@@ -26,7 +26,7 @@ const CreateBoardForm: FC<IProps> = ({
     const [type, setType] = useState<TBoardAccess>('public')
     const { isSession } = useAppSelector(state => state.user)
     const { refetch: refetchBoards } = useGetAllBoards(router.pathname, { enabled: false })
-    const { mutate } = useMutation(createBoard, {
+    const { mutate, isLoading } = useMutation(createBoard, {
         onSuccess: (data) => {
             if (!data?.data) {
                 toast.error({ message: data.message })
@@ -64,6 +64,7 @@ const CreateBoardForm: FC<IProps> = ({
             <Input
                 name="title"
                 placeholder={capitalize('title')}
+                disabled={isLoading}
             />
         </Item>
     )
@@ -77,6 +78,7 @@ const CreateBoardForm: FC<IProps> = ({
                 name="description"
                 placeholder={capitalize('description')}
                 autoSize={{ minRows: 6, maxRows: 6 }}
+                disabled={isLoading}
             />
         </Item>
     )
@@ -86,7 +88,12 @@ const CreateBoardForm: FC<IProps> = ({
             label={capitalize('type')}
             name="type"
         >
-            <Group onChange={(e) => setType(e.target.value)} value={type} defaultValue={type}>
+            <Group
+                onChange={(e) => setType(e.target.value)}
+                value={type}
+                defaultValue={type}
+                disabled={isLoading}
+            >
                 <Radio value={'public'}>{capitalize('public')}</Radio>
                 <Radio value={'private'}>{capitalize('private')}</Radio>
             </Group>
@@ -99,6 +106,7 @@ const CreateBoardForm: FC<IProps> = ({
                 className={styles.submit}
                 fontWeight={600}
                 htmlType="submit"
+                disabled={isLoading}
             >
                 {capitalize('submit')}
             </Button>
@@ -122,6 +130,7 @@ const CreateBoardForm: FC<IProps> = ({
                 {Description}
                 {Type}
                 {Submit}
+                {isLoading ? <Spin className='w-full flex justify-center' /> : null}
             </Form>
         </Modal>
     )

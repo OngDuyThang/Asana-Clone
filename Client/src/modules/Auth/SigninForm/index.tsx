@@ -1,6 +1,6 @@
 import { type FC, useContext } from 'react'
 import { Checkbox } from 'antd'
-import { Button, Input, Text, Form, Password, Container } from 'components'
+import { Button, Input, Text, Form, Password, Container, Spin } from 'components'
 import styles from '../index.module.less'
 import { FaUser, FaLock } from "react-icons/fa";
 import { TCredentialSignin } from 'types/auth';
@@ -22,7 +22,7 @@ const SigninForm: FC<IProps> = ({
     const dispatch = useAppDispatch()
     const toast = useContext(ToastContext) as ToastInstance
     const [form] = useForm();
-    const { mutate: handleSignin } = useMutation(signin, {
+    const { mutate: handleSignin, isLoading } = useMutation(signin, {
         onSuccess: (data) => {
             if (!data?.data) {
                 toast.error({ message: data.message })
@@ -56,6 +56,7 @@ const SigninForm: FC<IProps> = ({
                 name="username"
                 prefix={<FaUser />}
                 placeholder={capitalize('username')}
+                disabled={isLoading}
             />
         </Item>
     )
@@ -70,6 +71,7 @@ const SigninForm: FC<IProps> = ({
                 name="password"
                 prefix={<FaLock />}
                 placeholder={capitalize('password')}
+                disabled={isLoading}
             />
         </Item>
     )
@@ -86,6 +88,7 @@ const SigninForm: FC<IProps> = ({
                 tag="span" fontSize="14px" textDecoration="underline"
                 className="cursor-pointer"
                 onClick={setIsSignin}
+                style={{ ...(isLoading ? { display: 'none' } : null) }}
             >
                 {capitalize('or create an account')}
             </Text>
@@ -98,6 +101,7 @@ const SigninForm: FC<IProps> = ({
                 className={styles.submit}
                 fontWeight={600}
                 htmlType="submit"
+                disabled={isLoading}
             >
                 {capitalize('submit')}
             </Button>
@@ -115,6 +119,7 @@ const SigninForm: FC<IProps> = ({
             {Remember}
             {Signup}
             {Submit}
+            {isLoading ? <Spin className='w-full flex justify-center' /> : null}
         </Form>
     )
 }

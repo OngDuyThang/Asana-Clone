@@ -32,7 +32,7 @@ const LoadingScreen: FC<IProps> = ({
 
     const LoadingUI = (
         <Container
-            className='w-screen h-screen'
+            className='w-screen h-screen absolute z-[999] top-0 left-0'
             background={bgColor}
             flex
             justify='center'

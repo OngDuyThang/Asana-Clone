@@ -81,6 +81,14 @@ const Layout: FC<LayoutProps> = ({
         }
     }, [])
 
+    useEffect(() => {
+        const nativeFetch = window.fetch;
+        window.fetch = function (...args) {
+            console.log('detected fetch call');
+            return nativeFetch.apply(window, args);
+        }
+    }, [])
+
     if (router.pathname === '/404') return <>{children}</>
 
     return (

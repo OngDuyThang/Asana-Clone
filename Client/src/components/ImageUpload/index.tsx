@@ -6,11 +6,13 @@ import { type FC } from 'react'
 import { AiOutlineUpload } from 'react-icons/ai'
 
 interface IProps {
-    setImg: (img: File) => void
+    setImg: (img: File) => void;
+    disable?: boolean
 }
 
 const ImageUpload: FC<IProps> = ({
-    setImg
+    setImg,
+    disable = false
 }) => {
     const handleChange = (info: UploadChangeParam<UploadFile>) => {
         if (info.file.originFileObj) {
@@ -30,6 +32,7 @@ const ImageUpload: FC<IProps> = ({
                 fontSize='12px'
                 fontWeight={600}
                 icon={<AiOutlineUpload />}
+                disabled={disable}
             >
                 {capitalize('image')}
             </Button>

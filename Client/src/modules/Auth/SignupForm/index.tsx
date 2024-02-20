@@ -1,5 +1,5 @@
 import { type FC, useContext, useState } from 'react'
-import { Button, Input, Text, Form, Password, Container } from 'components'
+import { Button, Input, Text, Form, Password, Container, Spin } from 'components'
 import styles from '../index.module.less'
 import { FaUser, FaLock } from "react-icons/fa";
 import { MdMail } from "react-icons/md";
@@ -21,7 +21,7 @@ const SignupForm: FC<IProps> = ({
     const toast = useContext(ToastContext) as ToastInstance
     const [form] = useForm();
     const [avatar, setAvatar] = useState<File>()
-    const { mutate: handleSignup } = useMutation(signup, {
+    const { mutate: handleSignup, isLoading } = useMutation(signup, {
         onSuccess: (data) => {
             if (data.statusCode !== 201) {
                 toast.error({ message: data.message })
@@ -54,6 +54,7 @@ const SignupForm: FC<IProps> = ({
                 name="username"
                 prefix={<FaUser />}
                 placeholder={capitalize('username')}
+                disabled={isLoading}
             />
         </Item>
     )
@@ -68,6 +69,7 @@ const SignupForm: FC<IProps> = ({
                 name="password"
                 prefix={<FaLock />}
                 placeholder={capitalize('password')}
+                disabled={isLoading}
             />
         </Item>
     )
@@ -82,11 +84,12 @@ const SignupForm: FC<IProps> = ({
                 name="email"
                 prefix={<MdMail />}
                 placeholder={capitalize('email')}
+                disabled={isLoading}
             />
         </Item>
     )
 
-    const Avatar = <ImageUpload setImg={(img: File) => setAvatar(img)} />
+    const Avatar = <ImageUpload setImg={(img: File) => setAvatar(img)} disable={isLoading} />
 
     const Signin = (
         <Container flex justify='center' className='mt-6'>
@@ -94,6 +97,7 @@ const SignupForm: FC<IProps> = ({
                 tag="span" fontSize="14px" textDecoration="underline"
                 className="cursor-pointer"
                 onClick={setIsSignin}
+                style={{ ...(isLoading ? { display: 'none' } : null) }}
             >
                 {capitalize('back to sign in')}
             </Text>
@@ -106,6 +110,7 @@ const SignupForm: FC<IProps> = ({
                 className={styles.submit}
                 fontWeight={600}
                 htmlType="submit"
+                disabled={isLoading}
             >
                 {capitalize('submit')}
             </Button>
@@ -124,6 +129,7 @@ const SignupForm: FC<IProps> = ({
             {Avatar}
             {Signin}
             {Submit}
+            {isLoading ? <Spin className='w-full flex justify-center' /> : null}
         </Form>
     )
 }
