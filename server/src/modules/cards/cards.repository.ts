@@ -1,9 +1,16 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { CardEntity } from './card.entity';
 import { CreateCardDto } from './dto/create-card.dto';
 import { ColumnsRepository } from '../columns/columns.repository';
 import { UploadService } from '../upload/upload.service';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
+import { cachedBoardId } from 'src/utils/cache';
 
 @Injectable()
 export class CardsRepository extends Repository<CardEntity> {
@@ -11,6 +18,8 @@ export class CardsRepository extends Repository<CardEntity> {
     private dataSource: DataSource,
     private columnsRepository: ColumnsRepository,
     private uploadService: UploadService,
+    @Inject(CACHE_MANAGER)
+    private cacheManager: Cache,
   ) {
     super(CardEntity, dataSource.createEntityManager());
   }
@@ -27,12 +36,15 @@ export class CardsRepository extends Repository<CardEntity> {
             cover.buffer,
           )
         : '';
+
       const card = this.create({
         ...createCardDto,
         cover: location,
       });
       await this.save(card);
       await this.columnsRepository.patchCardOrder(card.columnId, card.id);
+
+      await this.cacheManager.del(cachedBoardId(card.boardId));
       return card;
     } catch (e) {
       throw new InternalServerErrorException(e.message);

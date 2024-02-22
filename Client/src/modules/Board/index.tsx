@@ -22,15 +22,23 @@ const Board: FC<BoardProps> = ({
     const router = useRouter()
     const [boardData, setBoardData] = useState<TBoard>(mockBoardData)
     const { isSession } = useAppSelector(state => state.user)
-    const { isLoading, refetch: refetchBoard, isFetching } = useGetBoardById(
+    const { isLoading, refetch: refetchBoard, isFetching, isError } = useGetBoardById(
         router.query?.slug as string,
         router.pathname, {
         onSuccess: (data) => {
-            if (!data?.data) return
+            if (!data?.data) {
+                router.replace('/404')
+                return
+            }
             setBoardData(data.data)
         },
         enabled: isSession
     })
+
+    if (isError) {
+        router.replace('/404')
+        return
+    }
 
     return (
         <BoardContext.Provider value={refetchBoard}>

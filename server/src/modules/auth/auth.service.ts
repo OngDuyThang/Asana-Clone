@@ -92,4 +92,8 @@ export class AuthService {
     }
     throw new UnauthorizedException();
   }
+
+  logout(res: Response) {
+    res.clearCookie('jwt');
+  }
 }

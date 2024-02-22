@@ -8,6 +8,7 @@ import {
   Req,
   Res,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -15,12 +16,14 @@ import { CredentialSigninDTO, CredentialSignupDTO } from './dto/credential.dto';
 import { SigninResponseDto } from './dto/signin.dto';
 import { Request, Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('/signup')
+  @UseGuards(ThrottlerGuard)
   @UseInterceptors(FileInterceptor('avatar'))
   async signUp(
     @Body() credential: CredentialSignupDTO,
@@ -39,6 +42,7 @@ export class AuthController {
   }
 
   @Post('/signin')
+  @UseGuards(ThrottlerGuard)
   async signIn(
     @Body() credential: CredentialSigninDTO,
     @Res({ passthrough: true }) res: Response,
@@ -49,5 +53,10 @@ export class AuthController {
   @Post('/refresh')
   async refresh(@Req() req: Request): Promise<string> {
     return this.authService.refresh(req);
+  }
+
+  @Post('/logout')
+  logout(@Res({ passthrough: true }) res: Response) {
+    return this.authService.logout(res);
   }
 }

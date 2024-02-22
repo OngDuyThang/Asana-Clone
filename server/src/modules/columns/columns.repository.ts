@@ -1,4 +1,5 @@
 import {
+  Inject,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -12,7 +13,9 @@ import { BoardsRepository } from '../boards/boards.repository';
 import { MoveCardDto } from './dto/move-card.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CardEntity } from '../cards/card.entity';
-
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
+import { cachedBoardId } from 'src/utils/cache';
 @Injectable()
 export class ColumnsRepository extends Repository<ColumnEntity> {
   constructor(
@@ -20,6 +23,8 @@ export class ColumnsRepository extends Repository<ColumnEntity> {
     private boardsRepository: BoardsRepository,
     @InjectRepository(CardEntity)
     private cardsRepository: Repository<CardEntity>,
+    @Inject(CACHE_MANAGER)
+    private cacheManager: Cache,
   ) {
     super(ColumnEntity, dataSource.createEntityManager());
   }
@@ -94,11 +99,14 @@ export class ColumnsRepository extends Repository<ColumnEntity> {
   async moveCard(moveCardDto: MoveCardDto): Promise<void> {
     const { currentId, prevId, cardId, currentCardOrderIds, prevCardOrderIds } =
       moveCardDto;
+
     if (currentId === prevId) {
       try {
         const column = await this.getColumnById(currentId);
         column.cardOrderIds = currentCardOrderIds;
         await this.save(column);
+
+        await this.cacheManager.del(cachedBoardId(column.boardId));
       } catch (e) {
         throwException(e);
       }
@@ -113,6 +121,8 @@ export class ColumnsRepository extends Repository<ColumnEntity> {
         const prevColumn = await this.getColumnById(prevId);
         prevColumn.cardOrderIds = prevCardOrderIds;
         await this.save(prevColumn);
+
+        await this.cacheManager.del(cachedBoardId(currentColumn.boardId));
       } catch (e) {
         throwException(e);
       }

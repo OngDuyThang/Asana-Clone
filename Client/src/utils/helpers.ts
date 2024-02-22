@@ -1,3 +1,4 @@
+import { logout } from "api/auth"
 import { some, has } from "lodash"
 
 export const sortByOrder = (
@@ -65,7 +66,7 @@ export const replaceAccessToken = (newToken: string) => {
     }
 }
 
-export const autoLogout = () => {
+export const autoLogout = async () => {
     if (typeof window !== 'undefined') {
         alert('Your session has been expired, ready to sign out')
         window.location.href = window.location.href
@@ -73,8 +74,9 @@ export const autoLogout = () => {
     }
 }
 
-export const userLogout = () => {
+export const userLogout = async () => {
     if (typeof window !== 'undefined') {
+        await logout()
         localStorage.clear()
         window.location.href = window.location.href
     }

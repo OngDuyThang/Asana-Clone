@@ -28,3 +28,7 @@ export const signup = async (
     const { data } = await axiosClient.post('/auth/signup', formData)
     return data
 }
+
+export const logout = async () => {
+    await axiosClient.post('/auth/logout')
+}

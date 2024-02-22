@@ -52,4 +52,20 @@ export class Env {
   get AWS_S3_BUCKET() {
     return this.configService.get('AWS_S3_BUCKET');
   }
+
+  get REDIS_HOST() {
+    return this.configService.get('REDIS_HOST');
+  }
+
+  get REDIS_PORT() {
+    return this.configService.get('REDIS_PORT');
+  }
+
+  get REDIS_USERNAME() {
+    return this.configService.get('REDIS_USERNAME');
+  }
+
+  get REDIS_PASSWORD() {
+    return this.configService.get('REDIS_PASSWORD');
+  }
 }

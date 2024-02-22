@@ -10,6 +10,7 @@ import { JwtStrategy } from './jwt.strategy';
 import { EnvModule } from 'src/config/env/env.module';
 import { jwtConfig } from 'src/config/jwt.config';
 import { UploadModule } from '../upload/upload.module';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -17,6 +18,12 @@ import { UploadModule } from '../upload/upload.module';
     TypeOrmModule.forFeature([UserEntity]),
     JwtModule.registerAsync(jwtConfig),
     PassportModule.register({ defaultStrategy: 'jwt' }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 10,
+      },
+    ]),
     UploadModule,
   ],
   controllers: [AuthController],

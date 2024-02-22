@@ -22,7 +22,6 @@ import AddColumn from '../Components/AddColumn'
 import { useMutation } from 'react-query'
 import { moveColumn } from 'api/board'
 import { ToastContext, ToastInstance } from 'layout'
-import { BoardContext, RefetchBoard } from '..'
 import { capitalize } from 'lodash'
 import { moveCard } from 'api/column'
 
@@ -34,9 +33,8 @@ const BoardContent: FC<BoardContentProps> = ({
     columnList: columns
 }) => {
     const toast = useContext(ToastContext) as ToastInstance
-    const refetchBoard = useContext(BoardContext) as RefetchBoard
-    const [columnList, setColumnList] = useState<TColumn[]>([...columns])
     const sensors = useGetSensors()
+    const [columnList, setColumnList] = useState<TColumn[]>([...columns])
     const [activeItem, setActiveItem] = useState<TColumn | TCard | null>(null)
     const { mutate: handleMoveColumn } = useMutation(moveColumn, {
         onSuccess: (data) => {
@@ -45,7 +43,6 @@ const BoardContent: FC<BoardContentProps> = ({
                 return
             }
             toast.success({ message: capitalize('move column successfully') })
-            refetchBoard()
         },
         retry: false,
     })
@@ -56,7 +53,6 @@ const BoardContent: FC<BoardContentProps> = ({
                 return
             }
             toast.success({ message: capitalize('move card successfully') })
-            refetchBoard()
         },
         retry: false,
     })

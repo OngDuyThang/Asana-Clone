@@ -17,18 +17,22 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const req = ctx.getRequest<Request>();
     const res = ctx.getResponse<Response>();
 
-    const exceptionStatus = exception.getStatus();
-    const exceptionResponse = exception.getResponse();
+    const message = exception.message;
+    const statusCode = exception.getStatus();
     const stack = exception.stack;
 
     this.logger.error(`${req.method} ${req.url} ${exception.message}`);
-    res.status(exceptionStatus).json(
+    res.status(statusCode).json(
       process.env.STAGE !== StageEnum.prod
         ? {
-            ...(exceptionResponse as object),
+            message,
+            statusCode,
             stack,
           }
-        : exceptionResponse,
+        : {
+            message,
+            statusCode,
+          },
     );
   }
 }

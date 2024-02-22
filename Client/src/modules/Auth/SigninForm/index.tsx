@@ -11,6 +11,7 @@ import { signinAction } from 'store/user/slice';
 import { capitalize } from 'lodash';
 import { ToastContext, ToastInstance } from "layout";
 import { Item, useForm } from 'components/Form';
+import { useRouter } from 'next/router';
 
 interface IProps {
     setIsSignin: () => void
@@ -19,6 +20,7 @@ interface IProps {
 const SigninForm: FC<IProps> = ({
     setIsSignin
 }) => {
+    const router = useRouter()
     const dispatch = useAppDispatch()
     const toast = useContext(ToastContext) as ToastInstance
     const [form] = useForm();
@@ -33,6 +35,7 @@ const SigninForm: FC<IProps> = ({
             }))
             toast.success({ message: capitalize('login successfully.') })
             form.resetFields()
+            router.replace('/dashboard')
         },
         retry: false
     })

@@ -1,10 +1,9 @@
 import { Button, Container, Input } from 'components'
 import { capitalize, kebabCase } from 'lodash'
 import { useState, type FC, useRef, useContext } from 'react'
-import { AiOutlineUpload } from "react-icons/ai";
 import { IoClose } from "react-icons/io5";
 import { useAppSelector } from 'hooks';
-import { InputRef, Upload, UploadFile } from 'antd';
+import { InputRef } from 'antd';
 import { useMutation } from 'react-query';
 import { useRouter } from 'next/router';
 import { ToastContext, ToastInstance } from 'layout';
