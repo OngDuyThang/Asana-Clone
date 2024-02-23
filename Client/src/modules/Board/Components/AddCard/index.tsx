@@ -1,4 +1,4 @@
-import { Button, Container, Input } from 'components'
+import { Button, Container, Input, Spin } from 'components'
 import { capitalize, kebabCase } from 'lodash'
 import { useState, type FC, useRef, useContext } from 'react'
 import { IoClose } from "react-icons/io5";
@@ -26,7 +26,7 @@ const AddCard: FC<IProps> = ({
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const inputRef = useRef<InputRef>(null)
     const [cover, setCover] = useState<File>()
-    const { mutate } = useMutation(createCard, {
+    const { mutate, isLoading } = useMutation(createCard, {
         onSuccess: (data) => {
             if (data.statusCode !== 201) {
                 toast.error({ message: data.message })
@@ -65,14 +65,19 @@ const AddCard: FC<IProps> = ({
             <Input
                 placeholder={capitalize('card title')}
                 ref={inputRef}
+                disabled={isLoading}
             />
-            <ImageUpload setImg={(img: File) => setCover(img)} />
+            <ImageUpload
+                setImg={(img: File) => setCover(img)}
+                disable={isLoading}
+            />
             <Container flex justify='between' align='center'>
                 <Button
                     fontSize='12px'
                     fontWeight={600}
                     icon={<MdAddBox className='w-4 h-4' />}
                     onClick={() => handleAdd(inputRef.current?.input?.value)}
+                    disabled={isLoading}
                 >
                     {capitalize('add')}
                 </Button>
@@ -81,6 +86,7 @@ const AddCard: FC<IProps> = ({
                     onClick={() => setIsOpen(false)}
                 />
             </Container>
+            {isLoading ? <Spin className='w-full flex justify-center' /> : null}
         </Container>
     )
 

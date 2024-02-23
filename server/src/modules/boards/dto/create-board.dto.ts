@@ -21,7 +21,6 @@ export class CreateBoardDto {
   title: string;
 
   @IsString()
-  @MinLength(1)
   @MaxLength(500)
   @IsOptional()
   @Trim()

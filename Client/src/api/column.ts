@@ -1,4 +1,4 @@
-import { CreateColumnDto, MoveCardRequest, TColumn } from "types/column";
+import { CreateColumnDto, DeleteColumnRequest, MoveCardRequest, TColumn } from "types/column";
 import { axiosClient } from "./axios";
 import { TApiResponse } from "types/api";
 
@@ -10,9 +10,10 @@ export const createColumn = async (
 }
 
 export const deleteColumn = async (
-    id: string
+    request: DeleteColumnRequest
 ): Promise<TApiResponse> => {
-    const { data } = await axiosClient.delete(`/columns/${id}`)
+    const { id, boardId } = request
+    const { data } = await axiosClient.delete(`/columns/${id}?boardId=${boardId}`)
     return data
 }
 

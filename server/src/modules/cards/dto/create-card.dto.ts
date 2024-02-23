@@ -25,11 +25,11 @@ export class CreateCardDto {
   @Trim()
   description?: string;
 
-  @IsUUID()
+  @IsUUID(4)
   @IsNotEmpty()
   columnId: string;
 
-  @IsUUID()
+  @IsUUID(4)
   @IsNotEmpty()
   boardId: string;
 

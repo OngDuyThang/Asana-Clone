@@ -12,7 +12,7 @@ interface IProps {
 
 const ImageUpload: FC<IProps> = ({
     setImg,
-    disable = false
+    disable
 }) => {
     const handleChange = (info: UploadChangeParam<UploadFile>) => {
         if (info.file.originFileObj) {

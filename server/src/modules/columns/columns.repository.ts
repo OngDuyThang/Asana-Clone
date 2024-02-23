@@ -41,11 +41,13 @@ export class ColumnsRepository extends Repository<ColumnEntity> {
     }
   }
 
-  async patchCardOrder(columnId: string, cardId: string): Promise<void> {
+  async pushCardOrder(columnId: string, cardId: string): Promise<void> {
     try {
       const column = await this.getColumnById(columnId);
       column.cardOrderIds.push(cardId);
       await this.save(column);
+
+      await this.cacheManager.del(cachedBoardId(column.boardId));
     } catch (e) {
       throwException(e);
     }
@@ -56,28 +58,32 @@ export class ColumnsRepository extends Repository<ColumnEntity> {
     user: UserEntity,
   ): Promise<ColumnEntity> {
     try {
-      const column = this.create(createColumnDto);
-      await this.save(column);
-      await this.boardsRepository.patchColumnOrder(
-        column.boardId,
-        user,
-        column.id,
-      );
-      return {
-        ...column,
-        cards: [],
-      };
+      const { title, boardId } = createColumnDto;
+      const column = this.create({
+        title,
+        boardId,
+      });
+      const resColumn = await this.save(column);
+
+      await this.boardsRepository.pushColumnOrder(boardId, user, resColumn.id);
+      return resColumn;
     } catch (e) {
       throw new InternalServerErrorException(e.message);
     }
   }
 
-  async deleteColumn(id: string): Promise<void> {
+  async deleteColumn(
+    id: string,
+    boardId: string,
+    user: UserEntity,
+  ): Promise<void> {
     try {
       const res = await this.delete({ id });
       if (!res.affected) {
         throw new NotFoundException();
       }
+
+      await this.boardsRepository.removeColumnOrder(boardId, user, id);
     } catch (e) {
       throwException(e);
     }

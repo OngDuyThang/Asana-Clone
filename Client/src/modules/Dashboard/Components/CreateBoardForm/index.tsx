@@ -5,7 +5,7 @@ import styles from './index.module.less'
 import { capitalize } from 'lodash';
 import { TBoardAccess } from 'types/board';
 import { useMutation } from 'react-query';
-import { createBoard, useGetAllBoards } from 'api/board';
+import { createBoard } from 'api/board';
 import { Item, useForm } from 'components/Form';
 import { Group } from 'components/Radio';
 import { useAppSelector } from 'hooks';
@@ -25,7 +25,6 @@ const CreateBoardForm: FC<IProps> = ({
     const [form] = useForm();
     const [type, setType] = useState<TBoardAccess>('public')
     const { isSession } = useAppSelector(state => state.user)
-    const { refetch: refetchBoards } = useGetAllBoards(router.pathname, { enabled: false })
     const { mutate, isLoading } = useMutation(createBoard, {
         onSuccess: (data) => {
             if (!data?.data) {
@@ -34,7 +33,7 @@ const CreateBoardForm: FC<IProps> = ({
             }
             toast.success({ message: capitalize('create board successfully.') })
             form.resetFields()
-            refetchBoards()
+            router.push('/')
         },
         retry: false
     })

@@ -58,11 +58,11 @@ export class CardEntity {
   column: ColumnEntity;
 
   @Column({ nullable: false, type: 'uuid' })
-  @IsUUID()
+  @IsUUID(4)
   columnId: string;
 
   @Column({ nullable: false, type: 'uuid' })
-  @IsUUID()
+  @IsUUID(4)
   boardId: string;
 
   @ManyToMany((_type) => UserEntity, (user) => user)

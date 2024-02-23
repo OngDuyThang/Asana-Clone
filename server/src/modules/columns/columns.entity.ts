@@ -42,7 +42,7 @@ export class ColumnEntity {
   board: BoardEntity;
 
   @Column({ nullable: false, type: 'uuid' })
-  @IsUUID()
+  @IsUUID(4)
   boardId: string;
 
   @OneToMany((_type) => CardEntity, (card) => card.column, { eager: true })

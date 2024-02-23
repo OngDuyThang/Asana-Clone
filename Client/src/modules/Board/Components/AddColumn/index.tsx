@@ -1,4 +1,4 @@
-import { Button, Container, Input } from 'components'
+import { Button, Container, Input, Spin } from 'components'
 import { capitalize } from 'lodash'
 import { useState, type FC, useRef, useContext } from 'react'
 import { RiMenuAddLine } from 'react-icons/ri'
@@ -21,7 +21,7 @@ const AddColumn: FC = () => {
     const color = useValueByTheme(LightColor.text, DarkColor.text)
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const inputRef = useRef<InputRef>(null)
-    const { mutate } = useMutation(createColumn, {
+    const { mutate, isLoading } = useMutation(createColumn, {
         onSuccess: (data) => {
             if (!data?.data) {
                 toast.error({ message: data.message })
@@ -60,6 +60,7 @@ const AddColumn: FC = () => {
             <Input
                 placeholder={capitalize('column title')}
                 ref={inputRef}
+                disabled={isLoading}
             />
             <Container flex justify='between' align='center'>
                 <Button
@@ -67,6 +68,7 @@ const AddColumn: FC = () => {
                     fontWeight={600}
                     icon={<RiMenuAddLine className='w-4 h-4' />}
                     onClick={() => handleAdd(inputRef.current?.input?.value)}
+                    disabled={isLoading}
                 >
                     {capitalize('add')}
                 </Button>
@@ -75,6 +77,7 @@ const AddColumn: FC = () => {
                     onClick={() => setIsOpen(false)}
                 />
             </Container>
+            {isLoading ? <Spin className='w-full flex justify-center' /> : null}
         </Container>
     )
 

@@ -1,47 +1,32 @@
 import { TDropdownItems } from "types/dropdown";
-import { MdAddBox, MdDelete } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 import { FaCut, FaCopy, FaPaste, FaCloud } from "react-icons/fa";
-import { CSSProperties } from "react";
-import { UseMutateFunction } from "react-query";
-import { TApiResponse } from "types/api";
-import { isSession } from "utils/helpers";
+import { capitalize } from "lodash";
 
 const iconCss: string = 'w-4 h-4'
-const itemCss: CSSProperties = {
-    minWidth: '120px',
-    gap: '4px',
-    alignItems: 'center'
-}
 
 export const items = (
-    columnId: string,
-    deleteColumn: UseMutateFunction<TApiResponse, unknown, string, unknown>,
+    openConfirmModal: () => void
 ): TDropdownItems => [
         {
-            label: 'Add new',
+            label: capitalize('cut'),
             key: '1',
-            icon: <MdAddBox className={iconCss} />,
-            style: itemCss
-        },
-        {
-            label: 'Cut',
-            key: '2',
             icon: <FaCut className={iconCss} />,
             style: {
                 gap: '4px'
             }
         },
         {
-            label: 'Copy',
-            key: '3',
+            label: capitalize('copy'),
+            key: '2',
             icon: <FaCopy className={iconCss} />,
             style: {
                 gap: '4px'
             }
         },
         {
-            label: 'Paste',
-            key: '4',
+            label: capitalize('paste'),
+            key: '3',
             icon: <FaPaste className={iconCss} />,
             style: {
                 gap: '4px'
@@ -51,19 +36,17 @@ export const items = (
             type: 'divider'
         },
         {
-            label: 'Remove this column',
-            key: '5',
+            label: capitalize('remove this column'),
+            key: '4',
             icon: <MdDelete className={iconCss} />,
             style: {
                 gap: '4px'
             },
-            onClick: () => {
-                if (isSession()) deleteColumn(columnId)
-            }
+            onClick: () => openConfirmModal()
         },
         {
-            label: 'Archive this column',
-            key: '6',
+            label: capitalize('archive this column'),
+            key: '5',
             icon: <FaCloud className={iconCss} />,
             style: {
                 gap: '4px'

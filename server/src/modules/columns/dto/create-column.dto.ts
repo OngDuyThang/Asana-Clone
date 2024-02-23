@@ -15,7 +15,7 @@ export class CreateColumnDto {
   @Trim()
   title: string;
 
-  @IsUUID()
+  @IsUUID(4)
   @IsNotEmpty()
   boardId: string;
 }

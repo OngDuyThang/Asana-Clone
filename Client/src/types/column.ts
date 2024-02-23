@@ -13,6 +13,11 @@ export type CreateColumnDto = {
     boardId: string;
 }
 
+export type DeleteColumnRequest = {
+    id: string,
+    boardId: string
+}
+
 export type MoveCardRequest = {
     currentId: string,
     prevId: string,

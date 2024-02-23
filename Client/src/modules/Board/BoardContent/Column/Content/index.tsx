@@ -29,8 +29,8 @@ export const Card = ({ cardData }: { cardData: TCard }) => {
         opacity: isDragging ? '0.5' : '1',
         ...(cardData.id.includes(EMPTY_CARD) ? {
             visibility: 'hidden',
-            height: '0',
-            pointerEvents: 'none'
+            // height: '0',
+            pointerEvents: 'none',
         } : null)
     };
 

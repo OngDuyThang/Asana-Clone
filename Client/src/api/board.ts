@@ -55,3 +55,10 @@ export const createBoard = async (
     const { data } = await axiosClient.post('/boards', request)
     return data
 }
+
+export const deleteBoard = async (
+    id: string
+): Promise<TApiResponse> => {
+    const { data } = await axiosClient.delete(`/boards/${id}`)
+    return data
+}

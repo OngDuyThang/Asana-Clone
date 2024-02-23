@@ -5,6 +5,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ColumnsService } from './columns.service';
@@ -30,8 +31,12 @@ export class ColumnsController {
   }
 
   @Delete('/:id')
-  async deleteColumn(@Param('id', uuidPipe) id: string): Promise<void> {
-    this.columnsService.deleteColumn(id);
+  async deleteColumn(
+    @Param('id', uuidPipe) id: string,
+    @Query('boardId', uuidPipe) boardId: string,
+    @GetUser() user: UserEntity,
+  ): Promise<void> {
+    this.columnsService.deleteColumn(id, boardId, user);
   }
 
   @Patch()

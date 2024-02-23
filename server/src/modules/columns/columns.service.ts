@@ -20,8 +20,12 @@ export class ColumnsService {
     return this.columnsRepository.createColumn(createColumnDto, user);
   }
 
-  async deleteColumn(id: string): Promise<void> {
-    this.columnsRepository.deleteColumn(id);
+  async deleteColumn(
+    id: string,
+    boardId: string,
+    user: UserEntity,
+  ): Promise<void> {
+    this.columnsRepository.deleteColumn(id, boardId, user);
   }
 
   async moveCard(moveCardDto: MoveCardDto): Promise<void> {

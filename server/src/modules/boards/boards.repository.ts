@@ -15,12 +15,14 @@ import { GetBoardsResDto } from './dto/get-boards-res.dto';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { cachedBoardId } from 'src/utils/cache';
+import { remove } from 'lodash';
 
 @Injectable()
 export class BoardsRepository extends Repository<BoardEntity> {
   constructor(
     private dataSource: DataSource,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    @Inject(CACHE_MANAGER)
+    private cacheManager: Cache,
   ) {
     super(BoardEntity, dataSource.createEntityManager());
   }
@@ -54,8 +56,8 @@ export class BoardsRepository extends Repository<BoardEntity> {
         owners: [user],
         ownerIds: [user.id],
       });
-      await this.save(board);
-      return board;
+      const resBoard = await this.save(board);
+      return resBoard;
     } catch (e) {
       throw new InternalServerErrorException(e.message);
     }
@@ -63,31 +65,23 @@ export class BoardsRepository extends Repository<BoardEntity> {
 
   async getBoardById(id: string, user: UserEntity): Promise<BoardEntity> {
     try {
-      const cachedBoard = await this.cacheManager.get<BoardEntity>(
-        cachedBoardId(id),
-      );
+      const board = await this.findOne({
+        where: [
+          { id, ownerIds: ArrayContains([user.id]) },
+          { id, memberIds: ArrayContains([user.id]) },
+        ],
+        relations: ['columns', 'owners'],
+      });
+      if (!board) throw new NotFoundException();
 
-      if (!cachedBoard) {
-        const board = await this.findOne({
-          where: [
-            { id, ownerIds: ArrayContains([user.id]) },
-            { id, memberIds: ArrayContains([user.id]) },
-          ],
-          relations: ['columns', 'owners'],
-        });
-        if (!board) throw new NotFoundException();
-
-        this.cacheManager.set<BoardEntity>(cachedBoardId(id), board);
-        return board;
-      }
-
-      return cachedBoard;
+      await this.cacheManager.set<BoardEntity>(cachedBoardId(id), board);
+      return board;
     } catch (e) {
       throwException(e);
     }
   }
 
-  async patchColumnOrder(
+  async pushColumnOrder(
     boardId: string,
     user: UserEntity,
     columnId: string,
@@ -103,10 +97,31 @@ export class BoardsRepository extends Repository<BoardEntity> {
     }
   }
 
+  async removeColumnOrder(
+    boardId: string,
+    user: UserEntity,
+    columnId: string,
+  ): Promise<void> {
+    try {
+      const board = await this.getBoardById(boardId, user);
+      board.columnOrderIds = remove(
+        [...board.columnOrderIds],
+        (id) => id === columnId,
+      );
+      await this.save(board);
+
+      await this.cacheManager.set<BoardEntity>(cachedBoardId(board.id), board);
+    } catch (e) {
+      throwException(e);
+    }
+  }
+
   async deleteBoardById(id: string, user: UserEntity): Promise<void> {
     try {
       const res = await this.delete({ id, ownerIds: ArrayContains([user.id]) });
       if (!res.affected) throw new NotFoundException();
+
+      await this.cacheManager.del(cachedBoardId(id));
     } catch (e) {
       throwException(e);
     }

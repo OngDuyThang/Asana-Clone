@@ -7,6 +7,8 @@ import {
 import { TModalProps } from 'types/modal';
 import { lightTheme, darkTheme } from './theme'
 import { useValueByTheme } from 'hooks';
+import { IoClose } from 'react-icons/io5';
+import { DarkColor, LightColor } from 'types/theme';
 
 interface ModalProps extends
     Pick<Required<AntdModalProps>, TModalProps>,
@@ -30,6 +32,7 @@ const Modal: FC<ModalProps> = ({
     ...props
 }) => {
     const theme = useValueByTheme(lightTheme, darkTheme)
+    const iconColor = useValueByTheme(LightColor.text, DarkColor.text)
 
     return (
         <AntdConfigProvider theme={theme}>
@@ -45,6 +48,7 @@ const Modal: FC<ModalProps> = ({
                 cancelButtonProps={cancelButtonProps}
                 okButtonProps={okButtonProps}
                 centered={centered}
+                closeIcon={<IoClose style={{ color: iconColor }} className='w-6 h-6' />}
                 {...props}
             >
                 {children}

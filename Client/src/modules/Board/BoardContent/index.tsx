@@ -24,6 +24,7 @@ import { moveColumn } from 'api/board'
 import { ToastContext, ToastInstance } from 'layout'
 import { capitalize } from 'lodash'
 import { moveCard } from 'api/column'
+import { useRouter } from 'next/router'
 
 interface BoardContentProps {
     columnList: TColumn[]
