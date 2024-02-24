@@ -15,7 +15,6 @@ import { GetBoardsResDto } from './dto/get-boards-res.dto';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { cachedBoardId } from 'src/utils/cache';
-import { remove } from 'lodash';
 
 @Injectable()
 export class BoardsRepository extends Repository<BoardEntity> {
@@ -104,10 +103,7 @@ export class BoardsRepository extends Repository<BoardEntity> {
   ): Promise<void> {
     try {
       const board = await this.getBoardById(boardId, user);
-      board.columnOrderIds = remove(
-        [...board.columnOrderIds],
-        (id) => id === columnId,
-      );
+      board.columnOrderIds.splice(board.columnOrderIds.indexOf(columnId), 1);
       await this.save(board);
 
       await this.cacheManager.set<BoardEntity>(cachedBoardId(board.id), board);
