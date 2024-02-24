@@ -33,7 +33,7 @@ const CreateBoardForm: FC<IProps> = ({
             }
             toast.success({ message: capitalize('create board successfully.') })
             form.resetFields()
-            router.push('/')
+            router.replace('/')
         },
         retry: false
     })

@@ -35,7 +35,7 @@ const SigninForm: FC<IProps> = ({
             }))
             toast.success({ message: capitalize('login successfully.') })
             form.resetFields()
-            router.replace('/dashboard')
+            router.replace('/')
         },
         retry: false
     })
