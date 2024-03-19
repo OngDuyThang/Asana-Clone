@@ -26,7 +26,11 @@ const items: TDropdownItems = [
     },
 ];
 
-const Templates: FC = () => {
+interface IProps {
+    fontSize?: string
+}
+
+const Templates: FC<IProps> = ({ fontSize }) => {
     const handleClick: TDropdownOnClick = ({ key }) => {
         console.log(key)
     };
@@ -36,6 +40,7 @@ const Templates: FC = () => {
             label='templates'
             items={items}
             onClick={handleClick}
+            fontSize={fontSize}
         />
     )
 }

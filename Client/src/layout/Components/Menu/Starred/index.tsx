@@ -26,7 +26,11 @@ const items: TDropdownItems = [
     },
 ];
 
-const Starred: FC = () => {
+interface IProps {
+    fontSize?: string
+}
+
+const Starred: FC<IProps> = ({ fontSize }) => {
     const handleClick: TDropdownOnClick = ({ key }) => {
         console.log(key)
     };
@@ -36,6 +40,7 @@ const Starred: FC = () => {
             label='starred'
             items={items}
             onClick={handleClick}
+            fontSize={fontSize}
         />
     )
 }

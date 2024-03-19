@@ -19,8 +19,8 @@
     }
      
     .left {
-        @media (max-width: 768px) {
-            width: 20%;
+        @media (max-width: 480px) {
+            width: 100%;
         }
 
         .logo {
@@ -33,15 +33,22 @@
         .menus {
             width: auto;
             color: #fff;
-            @media (max-width: 992px) {
+            @media (max-width: 1200px) {
                 display: none;
+            }
+        }
+        
+        .sider {
+            display: none;
+            @media (max-width: 1200px) {
+                display: block;
             }
         }
     }
     
     .right {
-        @media (max-width: 768px) {
-            width: 80%;
+        @media (max-width: 480px) {
+            width: 100%;
         }
 
         .themeSelect :global(.ant-select-selector) {
@@ -52,6 +59,11 @@
 
         .search {
             width: 300px !important;
+            @media (max-width: 768px) {
+                display: none;
+            }
         }
-    }  
+    }
+    
+    .sider-menu {}
 }

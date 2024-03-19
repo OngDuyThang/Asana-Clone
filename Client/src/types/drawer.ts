@@ -1,0 +1,1 @@
+export type TDrawerProps = 'children' | 'open' | 'onClose'

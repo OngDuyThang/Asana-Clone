@@ -26,7 +26,11 @@ const items: TDropdownItems = [
     },
 ];
 
-const Workspace: FC = () => {
+interface IProps {
+    fontSize?: string
+}
+
+const Workspace: FC<IProps> = ({ fontSize }) => {
     const handleClick: TDropdownOnClick = ({ key }) => {
         console.log(key)
     };
@@ -36,6 +40,7 @@ const Workspace: FC = () => {
             label='workspaces'
             items={items}
             onClick={handleClick}
+            fontSize={fontSize}
         />
     )
 }

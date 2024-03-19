@@ -101,3 +101,10 @@ export enum RadioColor {
     dark_primary = '#515151',
     dark_text = DARK_TEXT,
 }
+
+export enum DrawerColor {
+    light_bg = LIGHT_BOARD_COLUMN,
+    light_text = LIGHT_TEXT,
+    dark_bg = DARK_BOARD_COLUMN,
+    dark_text = DARK_TEXT,
+}

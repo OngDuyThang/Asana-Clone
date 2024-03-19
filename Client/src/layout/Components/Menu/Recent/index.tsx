@@ -26,7 +26,11 @@ const items: TDropdownItems = [
     },
 ];
 
-const Recent: FC = () => {
+interface IProps {
+    fontSize?: string
+}
+
+const Recent: FC<IProps> = ({ fontSize }) => {
     const handleClick: TDropdownOnClick = ({ key }) => {
         console.log(key)
     };
@@ -36,6 +40,7 @@ const Recent: FC = () => {
             label='recent'
             items={items}
             onClick={handleClick}
+            fontSize={fontSize}
         />
     )
 }

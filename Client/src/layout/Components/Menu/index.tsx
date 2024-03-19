@@ -9,12 +9,14 @@ interface MenuProps {
     label: string;
     items: TDropdownItems
     onClick: TDropdownOnClick;
+    fontSize?: string
 }
 
 const Menu: FC<MenuProps> = ({
     label,
     items,
-    onClick
+    onClick,
+    fontSize = '12px'
 }) => {
 
     return (
@@ -23,7 +25,7 @@ const Menu: FC<MenuProps> = ({
             onClick={onClick}
         >
             <Space size={8} align='center' >
-                <Text tag='span' fontWeight='600' fontSize='12px'>
+                <Text tag='span' fontWeight='600' fontSize={fontSize}>
                     {capitalize(label)}
                 </Text>
                 <FaCaretDown />
